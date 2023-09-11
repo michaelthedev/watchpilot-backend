@@ -1,0 +1,28 @@
+{
+  "name": "michaelthedev/watchpilot-backend",
+  "description": "Backend for WatchPilot",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Michael",
+      "email": "michael@logad.net"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "pecee/simple-router": "5.3.0.5",
+    "illuminate/database": "^10.20",
+    "rakit/validation": "^1.4",
+    "firebase/php-jwt": "^6.8",
+    "logadapp/http": "^0.4.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    },
+    "files": [
+      "app/helpers.php"
+    ]
+  }
+}
