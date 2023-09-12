@@ -2,7 +2,8 @@
 
 namespace App\Services\Providers;
 
-use App\Services\ApiProviderInterface;
+use App\DTO\MovieDetail;
+use App\Interfaces\ApiProviderInterface;
 use LogadApp\Http\Http;
 
 final class TmdbApiService implements ApiProviderInterface
@@ -13,6 +14,16 @@ final class TmdbApiService implements ApiProviderInterface
     public function __construct(string $apiKey)
     {
         $this->apiKey = $apiKey;
+    }
+
+    private function formatReleaseDate(string $releaseDate): string
+    {
+        return date('Y', strtotime($releaseDate));
+    }
+
+    private function formatImageUrl(string $image): string
+    {
+        return 'https://image.tmdb.org/t/p/w500' . $image;
     }
 
     public function getTrendingMoviesAndShows(): array
