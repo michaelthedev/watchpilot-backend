@@ -17,7 +17,11 @@ final class TmdbApiService implements ApiProviderInterface
 
     public function getTrendingMoviesAndShows(): array
     {
-        $request = Http::get($this->baseUrl .'/trending/all/day?with_original_language=en')
+        return [
+            'movies' => $this->getTrendingMovies(),
+            'shows' => $this->getTrendingShows()
+        ];
+    }
             ->withToken($this->apiKey)
             ->send();
 
