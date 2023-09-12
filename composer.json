@@ -2,7 +2,6 @@
   "name": "michaelthedev/watchpilot-backend",
   "description": "Backend for WatchPilot",
   "minimum-stability": "stable",
-  "license": "proprietary",
   "authors": [
     {
       "name": "Michael",
