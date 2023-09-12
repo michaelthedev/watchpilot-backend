@@ -1,9 +1,19 @@
 <?php
-
 namespace App\Services;
 
+use App\DTO\MovieDetail;
+use App\Interfaces\ApiProviderInterface;
 use App\Services\Providers\TmdbApiService;
 
+/**
+ * Media Service
+ *
+ * Serves as a middleman
+ * to the actual api provider
+ *
+ * @package App\Services
+ * @author Michael Arawole<michael@logad.net>
+ */
 class MediaService
 {
     private static function getProvider(): ApiProviderInterface
@@ -26,6 +36,17 @@ class MediaService
                 ->getTrendingMoviesAndShows();
         } catch (\Exception) {
             return [];
+        }
+    }
+
+    public static function getMovieDetail(int $id): ?MovieDetail
+    {
+        try {
+            $provider = self::getProvider();
+            return $provider
+                ->getMovieDetails($id);
+        } catch (\Exception) {
+             return null;
         }
     }
 }
