@@ -79,4 +79,30 @@ final class TmdbApiService implements ApiProviderInterface
 
         return $trending;
     }
+
+    /**
+     * Get details about a movie
+     * @param int $id
+     */
+    public function getMovieDetails(int $id): MovieDetail
+    {
+        $request = Http::get($this->baseUrl .'/movie/' .$id)
+            ->withToken($this->apiKey)
+            ->send();
+
+        $response = json_decode($request->body(), true);
+        return new MovieDetail(
+            id: $response['id'],
+            type: 'movie',
+            title: $response['title'],
+            rating: $response['vote_average'],
+            runtime: $response['runtime'],
+            tagline: $response['tagline'],
+            overview: $response['overview'],
+            imageUrl: $this->formatImageUrl($response['poster_path']),
+            releaseDate: $response['release_date'],
+            backdropUrl: $this->formatImageUrl($response['backdrop_path']),
+            releaseYear: $this->formatReleaseDate($response['release_date'])
+        );
+    }
 }
