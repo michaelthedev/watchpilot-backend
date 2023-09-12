@@ -8,4 +8,8 @@ Router::group(['prefix' => '/api'], function () {
     Router::get('/', [ApiController::class, 'index']);
 
     Router::get('/getFeaturedAndTrending', [ApiController::class, 'featuredAndTrending']);
+
+    Router::get('/movie/{id}', [ApiController::class, 'movieDetail']);
+
+    Router::get('/tv/{id}', [ApiController::class, 'showDetail']);
 });
