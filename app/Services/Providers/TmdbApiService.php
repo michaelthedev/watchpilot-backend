@@ -22,6 +22,30 @@ final class TmdbApiService implements ApiProviderInterface
             'shows' => $this->getTrendingShows()
         ];
     }
+
+    private function getTrendingMovies(string $period = 'day'): array
+    {
+        $trending = [];
+        $request = Http::get($this->baseUrl .'/trending/movie/' .$period. '?with_original_language=en')
+            ->withToken($this->apiKey)
+            ->send();
+
+        $response = json_decode($request->body(), true);
+        foreach ($response['results'] as $result) {
+            $trending[] = [
+                'id' => $result['id'],
+                'type' => $result['media_type'],
+                'title' => $result['title'],
+                'overview' => substr($result['overview'], 30),
+                'rating' => $result['vote_average'],
+                'imageUrl' => 'https://image.tmdb.org/t/p/w500' . $result['poster_path'],
+                'releaseYear' =>  date('Y', strtotime($result['release_date']))
+            ];
+        }
+
+        return $trending;
+    }
+
             ->withToken($this->apiKey)
             ->send();
 
