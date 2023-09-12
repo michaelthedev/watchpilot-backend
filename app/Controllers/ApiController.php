@@ -32,4 +32,13 @@ final class ApiController
             ]
         ]);
     }
+
+    public function movieDetail(int $id): void
+    {
+        response()->json([
+            'error' => false,
+            'message' => 'success',
+            'data' => MediaService::getMovieDetail($id)
+        ]);
+    }
 }
