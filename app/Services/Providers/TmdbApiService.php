@@ -3,7 +3,9 @@
 namespace App\Services\Providers;
 
 use App\DTO\MovieDetail;
+use App\DTO\TvDetail;
 use App\Interfaces\ApiProviderInterface;
+use Exception;
 use LogadApp\Http\Http;
 
 final class TmdbApiService implements ApiProviderInterface
@@ -105,6 +107,36 @@ final class TmdbApiService implements ApiProviderInterface
             releaseDate: $response['release_date'],
             backdropUrl: $this->formatImageUrl($response['backdrop_path'], true),
             releaseYear: $this->formatReleaseDate($response['release_date'])
+        );
+    }
+
+    /**
+     * Get details about a movie
+     * @param int $id
+     * @return TvDetail
+     * @throws Exception
+     */
+    public function getTvDetails(int $id): TvDetail
+    {
+        $request = Http::get($this->baseUrl .'/tv/' .$id)
+            ->withToken($this->apiKey)
+            ->send();
+
+        $response = json_decode($request->body(), true);
+        return new TvDetail(
+            id: $response['id'],
+            type: 'tv',
+            title: $response['name'],
+            rating: $response['vote_average'],
+            runtime: $response['episode_run_time'][0] ?? 0,
+            status: $response['status'],
+            seasons: $response['number_of_seasons'],
+            tagline: $response['tagline'],
+            overview: $response['overview'],
+            imageUrl: $this->formatImageUrl($response['poster_path']),
+            releaseDate: $response['first_air_date'],
+            backdropUrl: $this->formatImageUrl($response['backdrop_path'], true),
+            releaseYear: $this->formatReleaseDate($response['first_air_date'])
         );
     }
 }
