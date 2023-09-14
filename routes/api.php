@@ -11,5 +11,5 @@ Router::group(['prefix' => '/api'], function () {
 
     Router::get('/movie/{id}', [ApiController::class, 'movieDetail']);
 
-    Router::get('/tv/{id}', [ApiController::class, 'showDetail']);
+    Router::get('/tv/{id}', [ApiController::class, 'tvDetail']);
 });
