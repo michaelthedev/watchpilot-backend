@@ -41,4 +41,18 @@ final class ApiController
             'data' => MediaService::getMovieDetail($id)
         ]);
     }
+
+    /***
+     * Fetch details about a tv show
+     * @param int $id Tv show id
+     * @return void
+     */
+    public function tvDetail(int $id): void
+    {
+        response()->json([
+            'error' => false,
+            'message' => 'success',
+            'data' => MediaService::getTvDetail($id)
+        ]);
+    }
 }
