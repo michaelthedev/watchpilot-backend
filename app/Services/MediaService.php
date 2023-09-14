@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\DTO\MovieDetail;
+use App\DTO\TvDetail;
 use App\Interfaces\ApiProviderInterface;
 use App\Services\Providers\TmdbApiService;
 
@@ -45,6 +46,17 @@ class MediaService
             $provider = self::getProvider();
             return $provider
                 ->getMovieDetails($id);
+        } catch (\Exception) {
+             return null;
+        }
+    }
+
+    public static function getTvDetail(int $id): ?TvDetail
+    {
+        try {
+            $provider = self::getProvider();
+            return $provider
+                ->getTvDetails($id);
         } catch (\Exception) {
              return null;
         }
