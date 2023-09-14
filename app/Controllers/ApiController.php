@@ -33,6 +33,12 @@ final class ApiController
         ]);
     }
 
+
+    /**
+     * Fetch Details about a movie
+     * @param int $id Movie Id
+     * @return void
+     */
     public function movieDetail(int $id): void
     {
         response()->json([
