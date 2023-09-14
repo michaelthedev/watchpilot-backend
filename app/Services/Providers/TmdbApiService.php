@@ -83,6 +83,8 @@ final class TmdbApiService implements ApiProviderInterface
     /**
      * Get details about a movie
      * @param int $id
+     * @return MovieDetail
+     * @throws Exception
      */
     public function getMovieDetails(int $id): MovieDetail
     {
@@ -101,7 +103,7 @@ final class TmdbApiService implements ApiProviderInterface
             overview: $response['overview'],
             imageUrl: $this->formatImageUrl($response['poster_path']),
             releaseDate: $response['release_date'],
-            backdropUrl: $this->formatImageUrl($response['backdrop_path']),
+            backdropUrl: $this->formatImageUrl($response['backdrop_path'], true),
             releaseYear: $this->formatReleaseDate($response['release_date'])
         );
     }
