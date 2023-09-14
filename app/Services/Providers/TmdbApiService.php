@@ -21,9 +21,9 @@ final class TmdbApiService implements ApiProviderInterface
         return date('Y', strtotime($releaseDate));
     }
 
-    private function formatImageUrl(string $image): string
+    private function formatImageUrl(string $image, bool $highRes = false): string
     {
-        return 'https://image.tmdb.org/t/p/w500' . $image;
+        return 'https://image.tmdb.org/t/p/' .($highRes ? 'original' : 'w500'). $image;
     }
 
     public function getTrendingMoviesAndShows(): array
