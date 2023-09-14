@@ -3,7 +3,7 @@
 namespace App\DTO;
 
 /**
- * MovieDetail Data Transfer Object
+ * Movie Data Transfer Object
  * @package App\DTO
  * @author Michael A. <michael@logad.net>
  */
@@ -20,7 +20,7 @@ final class MovieDetail
         public string $releaseDate,
         public ?string $backdropUrl = null,
         public ?string $tagline = null,
-        public ?string $runtime = null,
+        public int $runtime = 0,
     )
     {
         $this->rating = round($this->rating, 2);
