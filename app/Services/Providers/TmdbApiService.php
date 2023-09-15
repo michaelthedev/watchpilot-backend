@@ -4,6 +4,7 @@ namespace App\Services\Providers;
 
 use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
+use App\DTO\TvEpisode;
 use App\Interfaces\ApiProviderInterface;
 use Exception;
 use LogadApp\Http\Http;
@@ -23,8 +24,9 @@ final class TmdbApiService implements ApiProviderInterface
         return date('Y', strtotime($releaseDate));
     }
 
-    private function formatImageUrl(string $image, bool $highRes = false): string
+    private function formatImageUrl(?string $image, bool $highRes = false): ?string
     {
+        if (empty($image)) return null;
         return 'https://image.tmdb.org/t/p/' .($highRes ? 'original' : 'w500'). $image;
     }
 
@@ -99,6 +101,7 @@ final class TmdbApiService implements ApiProviderInterface
             id: $response['id'],
             type: 'movie',
             title: $response['title'],
+            genres: $response['genres'],
             rating: $response['vote_average'],
             runtime: $response['runtime'],
             tagline: $response['tagline'],
@@ -123,6 +126,13 @@ final class TmdbApiService implements ApiProviderInterface
             ->send();
 
         $response = json_decode($request->body(), true);
+
+        // Last episode
+        $lastEpisodeDto = $this->getEpisodeDto($response['last_episode_to_air']);
+
+        // Next episode
+        $nextEpisodeDto = $this->getEpisodeDto($response['next_episode_to_air']);
+
         return new TvDetail(
             id: $response['id'],
             type: 'tv',
@@ -137,7 +147,33 @@ final class TmdbApiService implements ApiProviderInterface
             imageUrl: $this->formatImageUrl($response['poster_path']),
             releaseDate: $response['first_air_date'],
             backdropUrl: $this->formatImageUrl($response['backdrop_path'], true),
-            releaseYear: $this->formatReleaseDate($response['first_air_date'])
+            releaseYear: $this->formatReleaseDate($response['first_air_date']),
+            lastEpisode: $lastEpisodeDto,
+            nextEpisode: $nextEpisodeDto,
         );
+    }
+
+    /**
+     * @param ?array $episode
+     * @return TvEpisode|null
+     */
+    private function getEpisodeDto(?array $episode): ?TvEpisode
+    {
+        if (empty($episode)) {
+            $episodeDto = null;
+        } else {
+            $episodeDto = new TvEpisode(
+                id: $episode['id'],
+                title: $episode['name'],
+                rating: $episode['vote_average'],
+                season: $episode['season_number'],
+                runtime: $episode['runtime'],
+                episode: $episode['episode_number'],
+                overview: $episode['overview'],
+                imageUrl: $this->formatImageUrl($episode['still_path']),
+                releaseDate: $episode['air_date'],
+            );
+        }
+        return $episodeDto;
     }
 }
