@@ -22,6 +22,10 @@ final class TvDetail
      * @param string|null $backdropUrl
      * @param string|null $tagline
      * @param string|null $status status of the show (ended, ongoing..)
+     * @param int $runtime
+     * @param array $genres
+     * @param TvEpisode|null $lastEpisode
+     * @param TvEpisode|null $nextEpisode
      */
     public function __construct(
         public int $id,
@@ -38,6 +42,8 @@ final class TvDetail
         public ?string $status = null,
         public int $runtime = 0,
         public array $genres = [],
+        public ?TvEpisode $lastEpisode = null,
+        public ?TvEpisode $nextEpisode = null,
     )
     {
         $this->rating = round($this->rating, 2);
