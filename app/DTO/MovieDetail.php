@@ -21,6 +21,7 @@ final class MovieDetail
         public ?string $backdropUrl = null,
         public ?string $tagline = null,
         public int $runtime = 0,
+        public array $genres = [],
     )
     {
         $this->rating = round($this->rating, 2);

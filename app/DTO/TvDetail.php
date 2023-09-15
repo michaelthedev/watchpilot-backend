@@ -37,6 +37,7 @@ final class TvDetail
         public ?string $tagline = null,
         public ?string $status = null,
         public int $runtime = 0,
+        public array $genres = [],
     )
     {
         $this->rating = round($this->rating, 2);
