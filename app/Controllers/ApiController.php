@@ -61,4 +61,21 @@ final class ApiController
             'data' => MediaService::getTvDetail($id)
         ]);
     }
+
+    public function search(): void
+    {
+        validate([
+            'query' => 'required',
+            'type' => 'required|in:tv,movie,all'
+        ], input()->getOriginalParams());
+
+        $query = input()->get('query');
+        $type = input()->get('type');
+
+        response()->json([
+            'error' => false,
+            'message' => 'success',
+            'data' => MediaService::search($query, $type)
+        ]);
+    }
 }

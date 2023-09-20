@@ -61,4 +61,15 @@ class MediaService
              return null;
         }
     }
+
+    public static function search(string $query, string $type): ?array
+    {
+        try {
+            $provider = self::getProvider();
+            return $provider
+                ->search($query, $type);
+        } catch (\Exception) {
+             return null;
+        }
+    }
 }

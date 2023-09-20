@@ -10,6 +10,7 @@ Router::group(['prefix' => '/api'], function () {
     Router::get('/getFeaturedAndTrending', [ApiController::class, 'featuredAndTrending']);
 
     Router::get('/movie/{id}', [ApiController::class, 'movieDetail']);
-
     Router::get('/tv/{id}', [ApiController::class, 'tvDetail']);
+
+    Router::get('/search', [ApiController::class, 'search']);
 });

@@ -176,4 +176,33 @@ final class TmdbApiService implements ApiProviderInterface
         }
         return $episodeDto;
     }
+
+    public function search(string $query, string $type): array
+    {
+        $type = match ($type) {
+            'all' => 'multi',
+            default => $type,
+        };
+
+        $request = Http::get($this->baseUrl .'/search/' .$type. '?query=' .$query)
+            ->withToken($this->apiKey)
+            ->send();
+
+        $response = json_decode($request->body(), true);
+        $results = [];
+        foreach ($response['results'] as $result) {
+            if (empty($result['poster_path'])) continue;
+            $results[] = [
+                'id' => $result['id'],
+                'type' => $result['media_type'] ?? $type,
+                'title' => $result['title'] ?? $result['name'],
+                'overview' => substr($result['overview'], 30),
+                'rating' => $result['vote_average'],
+                'imageUrl' => $this->formatImageUrl($result['poster_path']),
+                'releaseYear' =>  date('Y', strtotime($result['release_date'] ?? $result['first_air_date']))
+            ];
+        }
+
+        return $results;
+    }
 }
