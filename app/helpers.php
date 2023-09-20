@@ -86,10 +86,10 @@ function csrf_token(): ?string
     return $baseVerifier?->getTokenProvider()->getToken();
 }
 
-function validate(array $rules): void
+function validate(array $rules, ?array $data = null): void
 {
     $validator = new Validator;
-    $validation = $validator->validate(input()->getOriginalPost(), $rules, [
+    $validation = $validator->validate($data ?? input()->getOriginalPost(), $rules, [
         'required' => ':attribute is required',
         'email' => ':attribute must be a valid email address',
         'numeric' => ':attribute must be numeric',
