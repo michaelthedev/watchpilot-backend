@@ -12,4 +12,11 @@ interface ApiProviderInterface
     public function getMovieDetails(int $id): MovieDetail;
 
     public function getTvDetails(int $id): TvDetail;
+
+    /**
+     * @param string $query What to search for
+     * @param string $type Search a tv show, movie or all
+     * @return array
+     */
+    public function search(string $query, string $type): array;
 }
