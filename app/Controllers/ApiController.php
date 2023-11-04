@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Controllers;
 
 use App\Services\MediaService;
@@ -23,16 +26,24 @@ final class ApiController
 
     public function featuredAndTrending(): void
     {
+        $trending = MediaService::getTrendingMoviesAndShows();
+
+        if (!$trending) {
+            response()->json([
+                'error' => true,
+                'message' => 'Unable to fetch trending movies and shows'
+            ]);
+        }
+
         response()->json([
             'error' => false,
             'message' => 'Trending and Featured Movies',
             'data' => [
                 'featured' => [],
-                'trending' => MediaService::getTrendingMoviesAndShows(),
+                'trending' => $trending
             ]
         ]);
     }
-
 
     /**
      * Fetch Details about a movie
