@@ -1,4 +1,5 @@
 <?php
+
 return [
     'name' => 'WatchPilot',
     'url' => 'https://www.watchpilot.test',
