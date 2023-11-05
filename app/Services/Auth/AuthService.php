@@ -36,6 +36,9 @@ final class AuthService
             $response['error'] = false;
             $response['message'] = 'Login Successful';
             $response['data'] = $jwt;
+            $response['data'] += [
+                'user' => $user
+            ];
         }
 
         return $response;
