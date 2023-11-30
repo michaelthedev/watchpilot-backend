@@ -39,6 +39,7 @@ Router::group(['prefix' => '/api'], function () {
 
             Router::delete('/{watchlist_id}', [WatchlistController::class, 'destroy']);
             Router::patch('/{watchlist_id}', [WatchlistController::class, 'update']);
+            Router::put('/{watchlist_id}', [WatchlistController::class, 'storeItem']);
         });
     });
 });

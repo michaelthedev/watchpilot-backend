@@ -91,6 +91,34 @@ final class WatchlistController
             'message' => 'Watchlist deleted successfully',
         ]);
     }
+
+    public function storeItem(int $watchlist_id): void
+    {
+        validate([
+            'media_id' => 'required',
+            'media_type' => 'required',
+            'media_title' => 'required',
+        ]);
+
+        $user = request()->user;
+
+        $watchlist = $user->watchlists()->find($watchlist_id);
+        if (!$watchlist) {
+            response()->httpCode(400)->json([
+                'error' => true,
+                'message' => 'Watchlist not found',
+            ]);
+        }
+
+        $watchlist->items()->create([
+            'title' => input('media_title'),
+            'type' => input('media_type'),
+            'item_id' => input('media_id'),
+        ]);
+
+        response()->httpCode(200)->json([
+            'error' => false,
+            'message' => 'Item added to watchlist successfully',
         ]);
     }
 }
