@@ -36,10 +36,13 @@ final class WatchlistController
             'name' => $name
         ]);
 
-        response()->json([
+        response()->httpCode(201)->json([
             'error' => false,
             'message' => 'Watchlist created successfully',
-            'data' => $watchlist
+            'data' => $watchlist->only(['id', 'name', 'created_at'])
+        ]);
+    }
+
         ]);
     }
 }
