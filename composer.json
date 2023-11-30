@@ -14,7 +14,8 @@
     "illuminate/database": "^10.20",
     "rakit/validation": "^1.4",
     "firebase/php-jwt": "^6.8",
-    "logadapp/http": "^0.4.2"
+    "logadapp/http": "^0.4.2",
+    "symfony/console": "^6.4"
   },
   "autoload": {
     "psr-4": {
