@@ -23,5 +23,13 @@
     "files": [
       "app/Helpers/general.php"
     ]
+  },
+  "require-dev": {
+    "nunomaduro/phpinsights": "^2.11"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
