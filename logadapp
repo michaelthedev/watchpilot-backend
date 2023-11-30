@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+use App\Commands\StartServer;
+use Symfony\Component\Console\Application;
+
+require __DIR__.'/bootstrap/app.php';
+
+$application = new Application();
+
+try {
+
+    $application->add(new StartServer());
+
+    $application->run();
+
+} catch (Exception $e) {
+    print($e->getMessage());
+}
