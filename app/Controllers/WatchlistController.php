@@ -70,6 +70,27 @@ final class WatchlistController
             'data' => $watchlist->only(['id', 'name', 'updated_at'])
         ]);
     }
+
+    public function destroy(int $watchlist_id): void
+    {
+        $user = request()->user;
+
+        $watchlist = $user->watchlists()->find($watchlist_id);
+        if (!$watchlist) {
+            response()->httpCode(400)->json([
+                'error' => true,
+                'message' => 'Watchlist not found',
+            ]);
+        }
+
+        $watchlist->items()->delete();
+        $watchlist->delete();
+
+        response()->httpCode(200)->json([
+            'error' => false,
+            'message' => 'Watchlist deleted successfully',
+        ]);
+    }
         ]);
     }
 }
