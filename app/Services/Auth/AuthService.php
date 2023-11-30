@@ -10,6 +10,7 @@ use App\Models\User;
  * Auth Service
  *
  * @package App\Services\Auth
+ *
  * @author Michael Arawole <michael@logad.net>
  */
 final class AuthService
@@ -20,7 +21,9 @@ final class AuthService
         $response['message'] = 'Login Failed. Please check your details';
 
         $user = User::findByUsername($username);
-        if (!$user) return $response;
+        if (! $user) {
+            return $response;
+        }
 
         // Verify password
         if (password_verify($password, $user->password)) {
@@ -30,30 +33,32 @@ final class AuthService
 
             // Generate JWT
             $jwt = JwtService::encode([
-                'token' => $user->remember_token
+                'token' => $user->remember_token,
             ]);
 
             $response['error'] = false;
             $response['message'] = 'Login Successful';
             $response['data'] = $jwt;
             $response['data'] += [
-                'user' => $user
+                'user' => $user,
             ];
         }
 
         return $response;
     }
 
-    private static function generateToken(): string
-    {
-        return bin2hex(random_bytes(16));
-    }
-
     public static function authenticate(string $token): ?User
     {
         $verify = JwtService::verify($token);
-        if (empty($verify['token'])) return null;
+        if (empty($verify['token'])) {
+            return null;
+        }
 
         return User::where('remember_token', $verify['token'])->first();
+    }
+
+    private static function generateToken(): string
+    {
+        return bin2hex(random_bytes(16));
     }
 }
