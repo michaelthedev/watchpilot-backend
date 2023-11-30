@@ -16,6 +16,7 @@ require dirname(__FILE__, 2) . '/app/bootstrap.php';
 require ROUTES_PATH . '/api.php';
 
 SimpleRouter::enableMultiRouteRendering(false);
+
 try {
     SimpleRouter::start();
 } catch (NotFoundHttpException) {
