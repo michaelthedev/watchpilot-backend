@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 final class User extends Model
 {
-
     protected $hidden = ['password', 'remember_token'];
 
     protected $fillable = ['username', 'password'];

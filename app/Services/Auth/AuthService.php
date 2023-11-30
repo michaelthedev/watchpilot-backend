@@ -40,7 +40,7 @@ final class AuthService
             $response['message'] = 'Login Successful';
             $response['data'] = $jwt;
             $response['data'] += [
-                'user' => $user,
+                'user' => $user->only(['id', 'username'])
             ];
         }
 
