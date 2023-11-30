@@ -1,6 +1,5 @@
 <?php
 
-use App\Exceptions\ValidationException;
 use Pecee\Http\Input\InputHandler;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 use Pecee\Http\Url;
@@ -26,22 +25,16 @@ use Rakit\Validation\Validator;
  * @return Url
  * @throws InvalidArgumentException
  */
-function url(?string $name = null, array|string $parameters = null, ?array $getParams = null): Url
+function url(?string $name = null, array|string|null $parameters = null, ?array $getParams = null): Url
 {
     return Router::getUrl($name, $parameters, $getParams);
 }
 
-/**
- * @return Response
- */
 function response(): Response
 {
     return Router::response();
 }
 
-/**
- * @return Request
- */
 function request(): Request
 {
     return Router::request();
@@ -63,10 +56,6 @@ function input(string $index = null, mixed $defaultValue = null, ...$methods): a
     return request()->getInputHandler();
 }
 
-/**
- * @param string $url
- * @param int|null $code
- */
 function redirect(string $url, ?int $code = null): void
 {
     if ($code !== null) {
