@@ -27,12 +27,17 @@ Router::group(['prefix' => '/api'], function () {
     Router::get('/search', [ApiController::class, 'search']);
 
     Router::group(['middleware' => Auth::class], function () {
+
         Router::group(['prefix' => '/user'], function () {
             Router::get('/', [UserController::class, 'index']);
             Router::post('/update', [UserController::class, 'update']);
         });
 
-        Router::get('/watchlists', [WatchlistController::class, 'index']);
-        Router::post('/watchlists', [WatchlistController::class, 'store']);
+        Router::group(['prefix' => '/watchlists'], function () {
+            Router::get('/', [WatchlistController::class, 'index']);
+            Router::post('/', [WatchlistController::class, 'store']);
+
+            Router::patch('/{watchlist_id}', [WatchlistController::class, 'update']);
+        });
     });
 });

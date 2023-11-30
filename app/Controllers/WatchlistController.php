@@ -43,6 +43,33 @@ final class WatchlistController
         ]);
     }
 
+    public function update(int $watchlist_id): void
+    {
+        validate([
+            'name' => 'required',
+        ]);
+
+        $user = request()->user;
+        $name = input('name');
+
+        $watchlist = $user->watchlists()->find($watchlist_id);
+        if (!$watchlist) {
+            response()->httpCode(400)->json([
+                'error' => true,
+                'message' => 'Watchlist not found',
+            ]);
+        }
+
+        $watchlist->update([
+            'name' => $name
+        ]);
+
+        response()->httpCode(200)->json([
+            'error' => false,
+            'message' => 'Watchlist updated successfully',
+            'data' => $watchlist->only(['id', 'name', 'updated_at'])
+        ]);
+    }
         ]);
     }
 }
