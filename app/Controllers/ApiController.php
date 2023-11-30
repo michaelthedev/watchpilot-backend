@@ -59,7 +59,7 @@ final class ApiController
         ]);
     }
 
-    /***
+    /**
      * Fetch details about a tv show
      * @param int $id Tv show id
      * @return void
