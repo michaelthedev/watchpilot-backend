@@ -14,7 +14,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 final class WatchlistItem extends Model
 {
     protected $fillable = [
-        '*'
+        'title',
+        'type',
+        'item_id',
     ];
 
     public function watchlist(): BelongsTo

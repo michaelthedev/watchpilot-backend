@@ -23,6 +23,25 @@ final class WatchlistController
         ]);
     }
 
+    public function get(int $watchlist_id): void
+    {
+        $user = request()->user;
+
+        $watchlist = $user->watchlists()->with('items')->find($watchlist_id);
+        if (!$watchlist) {
+            response()->httpCode(400)->json([
+                'error' => true,
+                'message' => 'Watchlist not found',
+            ]);
+        }
+
+        response()->json([
+            'error' => false,
+            'message' => 'success',
+            'data' => $watchlist
+        ]);
+    }
+
     public function store(): void
     {
         validate([
