@@ -6,6 +6,7 @@ use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
 use App\DTO\TvEpisode;
 use App\Interfaces\ApiProviderInterface;
+use Carbon\Carbon;
 use Exception;
 use LogadApp\Http\Http;
 
@@ -137,6 +138,76 @@ final class TmdbApiService implements ApiProviderInterface
 
         return $trending;
     }
+
+	private function getAiringShows(string $timezone): array
+    {
+        $aring = [];
+
+		// get date based on timezone
+		$date = Carbon::now($timezone);
+
+		// get beginning and end of week
+		$beginningOfWeek = $date->startOfWeek()->format('Y-m-d');
+		$endOfWeek = $date->endOfWeek()->format('Y-m-d');
+
+		$request = Http::get($this->baseUrl .'/discover/tv?air_date.gte='.$beginningOfWeek.'&air_date.lte='.$endOfWeek.'&sort_by=popularity.desc&with_original_language=en&timezone=' .$timezone)
+			->withToken($this->apiKey)
+			->send();
+
+        $response = json_decode($request->body(), true);
+        foreach ($response['results'] as $result) {
+            $aring[] = [
+                'id' => $result['id'],
+                'type' => 'tv',
+                'title' => htmlentities($result['name']),
+                'overview' => htmlentities(substr($result['overview'], 0,100)),
+                'rating' => $result['vote_average'],
+                'imageUrl' => $this->formatImageUrl($result['poster_path']),
+                'releaseYear' => date('Y', strtotime($result['first_air_date']))
+            ];
+        }
+
+        return $aring;
+    }
+
+	private function getAiringMovies(string $timezone): array
+    {
+        $aring = [];
+
+		// get date based on timezone
+		$date = Carbon::now($timezone);
+
+		// get beginning and end of week
+		$beginningOfWeek = $date->startOfWeek()->format('Y-m-d');
+		$endOfWeek = $date->endOfWeek()->format('Y-m-d');
+
+        $request = Http::get($this->baseUrl .'/discover/movie?air_date.gte='.$beginningOfWeek.'&air_date.lte='.$endOfWeek.'&sort_by=popularity.desc&with_original_language=en&timezone=' .$timezone)
+            ->withToken($this->apiKey)
+            ->send();
+
+        $response = json_decode($request->body(), true);
+        foreach ($response['results'] as $result) {
+            $aring[] = [
+                'id' => $result['id'],
+                'type' => 'tv',
+				'title' => htmlentities($result['title']),
+				'overview' => htmlentities(substr($result['overview'], 0, 100)),
+				'rating' => $result['vote_average'],
+                'imageUrl' => $this->formatImageUrl($result['poster_path']),
+				'releaseYear' =>  date('Y', strtotime($result['release_date']))
+            ];
+        }
+
+        return $aring;
+    }
+
+	public function getAiring(string $timezone): array
+	{
+		return [
+			'movies' => $this->getAiringMovies($timezone),
+			'shows' => $this->getAiringShows($timezone),
+		];
+	}
 
     /**
      * Get details about a movie
