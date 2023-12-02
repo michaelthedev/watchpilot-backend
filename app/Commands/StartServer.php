@@ -28,7 +28,12 @@ final class StartServer extends Command
                 'What port should the server run on?',
                 8000
             )
-        ;
+            ->addOption(
+                'host',
+                'H',
+                InputOption::VALUE_OPTIONAL,
+                'What host should the server run on?'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -36,13 +41,18 @@ final class StartServer extends Command
         $port = $input->getOption('port');
         $io = new SymfonyStyle($input, $output);
 
+        $address = "localhost:$port";
+        if ($input->hasOption('host')) {
+            $address = "0.0.0.0:8888";
+        }
+
         // show starting server info style message
-        $io->info("Starting server on http://localhost:$port");
+        $io->info("Starting server on http://$address");
 
         // start the server
-        shell_exec("php -S localhost:$port -t public");
+        shell_exec("php -S $address -t public");
 
-        $io->success("Server started on http://localhost:$port");
+        $io->success("Server started on http://$address");
 
         return Command::SUCCESS;
     }
