@@ -15,15 +15,17 @@ use App\Services\MediaService;
  */
 final class DiscoverController
 {
-	private ?MediaService $mediaService;
+	private MediaService $mediaService;
 
-    public function __construct(?MediaService $mediaService = null)
+    public function __construct()
     {
-        $this->mediaService = $mediaService;
+        $this->mediaService = new MediaService();
     }
+
     public function trending(): void
     {
-        $trending = MediaService::getTrendingMoviesAndShows();
+        $trending = $this->mediaService
+			->getTrending();
 
         response()->json([
             'error' => false,
@@ -34,7 +36,8 @@ final class DiscoverController
 
     public function featured(): void
     {
-        $featured = MediaService::getFeaturedMoviesAndShows();
+        $featured = $this->mediaService
+			->getFeatured();
 
         response()->json([
             'error' => false,
@@ -45,7 +48,8 @@ final class DiscoverController
 
     public function airing(): void
     {
-        $airing = MediaService::getAiringToday();
+        $airing = $this->mediaService
+			->getAiring(input('timezone'));
 
         response()->json([
             'error' => false,

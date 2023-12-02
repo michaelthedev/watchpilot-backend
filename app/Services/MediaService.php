@@ -5,6 +5,7 @@ use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
 use App\Interfaces\ApiProviderInterface;
 use App\Services\Providers\TmdbApiService;
+use Exception;
 
 /**
  * Media Service
@@ -17,70 +18,83 @@ use App\Services\Providers\TmdbApiService;
  */
 class MediaService
 {
-    private static function getProvider(): ApiProviderInterface
-    {
-        $currentProvider = config('app.apiProvider');
-        $providers = config('app.providers');
-        $apiKey = $providers[$currentProvider]['apiKey'] ?? null;
+	private ApiProviderInterface $provider;
 
-        return match ($currentProvider) {
-            'tmdb' => new TmdbApiService($apiKey),
-            default => throw new \Exception('Invalid API provider'),
-        };
-    }
+	/**
+	 * @throws Exception
+	 */
+	public function __construct()
+	{
+		$currentProvider = config('app.apiProvider');
+		$providers = config('app.providers');
+		$apiKey = $providers[$currentProvider]['apiKey'] ?? null;
 
-    public static function getTrendingMoviesAndShows(): array
+		$this->provider = match ($currentProvider) {
+			'tmdb' => new TmdbApiService($apiKey),
+			default => throw new Exception('Invalid API provider'),
+		};
+	}
+
+    public function getTrending(): array
     {
         try {
-            $provider = self::getProvider();
-            return $provider
+            return $this->provider
                 ->getTrendingMoviesAndShows();
-        } catch (\Exception) {
+        } catch (Exception) {
             return [];
         }
     }
 
-    public static function getFeaturedMoviesAndShows(): array
+    public function getFeatured(): array
     {
         try {
-            $provider = self::getProvider();
-            return $provider
+            return $this->provider
                 ->getFeaturedMoviesAndShows();
-        } catch (\Exception) {
+        } catch (Exception) {
             return [];
         }
     }
 
+	public function getAiring(?string $timezone = null): array
+	{
+		$timezone = $timezone ?? 'UTC';
+		try {
+			return $this->provider
+				->getAiring($timezone);
+		} catch (Exception) {
+			return [];
+		}
+	}
 
-    public static function getMovieDetail(int $id): ?MovieDetail
+
+    public function getMovieDetail(int $id): ?MovieDetail
     {
         try {
-            $provider = self::getProvider();
+            $provider = $this->provider;
             return $provider
                 ->getMovieDetails($id);
-        } catch (\Exception) {
+        } catch (Exception) {
              return null;
         }
     }
 
-    public static function getTvDetail(int $id): ?TvDetail
+    public function getTvDetail(int $id): ?TvDetail
     {
         try {
-            $provider = self::getProvider();
+            $provider = $this->provider;
             return $provider
                 ->getTvDetails($id);
-        } catch (\Exception) {
+        } catch (Exception) {
              return null;
         }
     }
 
-    public static function search(string $query, string $type): ?array
+    public function search(string $query, string $type): ?array
     {
         try {
-            $provider = self::getProvider();
-            return $provider
+            return $this->provider
                 ->search($query, $type);
-        } catch (\Exception) {
+        } catch (Exception) {
              return null;
         }
     }
