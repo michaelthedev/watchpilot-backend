@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 final class Watchlist extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'uid'];
 
     public function user(): BelongsTo
     {

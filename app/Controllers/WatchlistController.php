@@ -23,11 +23,15 @@ final class WatchlistController
         ]);
     }
 
-    public function get(int $watchlist_id): void
+    public function get(string $uid): void
     {
         $user = request()->user;
 
-        $watchlist = $user->watchlists()->with('items')->find($watchlist_id);
+        $watchlist = $user->watchlists()
+            ->with('items')
+            ->where('uid', $uid)
+            ->first();
+
         if (!$watchlist) {
             response()->httpCode(400)->json([
                 'error' => true,
@@ -51,18 +55,30 @@ final class WatchlistController
         $user = request()->user;
         $name = input('name');
 
+        // confirm name is unique
+        $existingWatchlist = $user->watchlists()
+            ->where('name', $name)
+            ->first();
+        if ($existingWatchlist) {
+            response()->httpCode(400)->json([
+                'error' => true,
+                'message' => 'Watchlist name already exists',
+            ]);
+        }
+
         $watchlist = $user->watchlists()->create([
-            'name' => $name
+            'name' => $name,
+            'uid' => uniqid(),
         ]);
 
         response()->httpCode(201)->json([
             'error' => false,
             'message' => 'Watchlist created successfully',
-            'data' => $watchlist->only(['id', 'name', 'created_at'])
+            'data' => $watchlist->only(['id', 'uid', 'name', 'created_at'])
         ]);
     }
 
-    public function update(int $watchlist_id): void
+    public function update(string $uid): void
     {
         validate([
             'name' => 'required',
@@ -71,7 +87,9 @@ final class WatchlistController
         $user = request()->user;
         $name = input('name');
 
-        $watchlist = $user->watchlists()->find($watchlist_id);
+        $watchlist = $user->watchlists()
+            ->where('uid', $uid)
+            ->first();
         if (!$watchlist) {
             response()->httpCode(400)->json([
                 'error' => true,
@@ -86,15 +104,17 @@ final class WatchlistController
         response()->httpCode(200)->json([
             'error' => false,
             'message' => 'Watchlist updated successfully',
-            'data' => $watchlist->only(['id', 'name', 'updated_at'])
+            'data' => $watchlist
         ]);
     }
 
-    public function destroy(int $watchlist_id): void
+    public function destroy(string $uid): void
     {
         $user = request()->user;
 
-        $watchlist = $user->watchlists()->find($watchlist_id);
+        $watchlist = $user->watchlists()
+            ->where('uid', $uid)
+            ->first();
         if (!$watchlist) {
             response()->httpCode(400)->json([
                 'error' => true,
@@ -111,7 +131,7 @@ final class WatchlistController
         ]);
     }
 
-    public function storeItem(int $watchlist_id): void
+    public function storeItem(string $uid): void
     {
         validate([
             'media_id' => 'required',
@@ -121,7 +141,9 @@ final class WatchlistController
 
         $user = request()->user;
 
-        $watchlist = $user->watchlists()->find($watchlist_id);
+        $watchlist = $user->watchlists()
+            ->where('uid', $uid)
+            ->first();
         if (!$watchlist) {
             response()->httpCode(400)->json([
                 'error' => true,
