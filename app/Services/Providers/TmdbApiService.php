@@ -30,6 +30,60 @@ final class TmdbApiService implements ApiProviderInterface
         return 'https://image.tmdb.org/t/p/' .($highRes ? 'original' : 'w500'). $image;
     }
 
+    public function getFeaturedMoviesAndShows(): array
+    {
+        return [
+            'movies' => $this->getFeaturedMovies(),
+            'shows' => $this->getFeaturedShows()
+        ];
+    }
+
+    private function getFeaturedMovies(): array
+    {
+        $featured = [];
+        $request = Http::get($this->baseUrl .'/discover/movie?with_original_language=en&sort_by=popularity.desc&with_release_type=2|3')
+            ->withToken($this->apiKey)
+            ->send();
+
+        $response = json_decode($request->body(), true);
+        foreach ($response['results'] as $result) {
+            $featured[] = [
+                'id' => $result['id'],
+                'type' => 'movie',
+                'title' => htmlentities($result['title']),
+                'overview' => htmlentities(substr($result['overview'], 30)),
+                'rating' => $result['vote_average'],
+                'imageUrl' => 'https://image.tmdb.org/t/p/w500' . $result['poster_path'],
+                'releaseYear' =>  date('Y', strtotime($result['release_date']))
+            ];
+        }
+
+        return $featured;
+    }
+
+    private function getFeaturedShows(): array
+    {
+        $featured = [];
+        $request = Http::get($this->baseUrl .'/discover/tv?with_original_language=en&sort_by=popularity.desc')
+            ->withToken($this->apiKey)
+            ->send();
+
+        $response = json_decode($request->body(), true);
+        foreach ($response['results'] as $result) {
+            $featured[] = [
+                'id' => $result['id'],
+                'type' => 'tv',
+                'title' => htmlentities($result['name']),
+                'overview' => htmlentities(substr($result['overview'], 30)),
+                'rating' => $result['vote_average'],
+                'imageUrl' => 'https://image.tmdb.org/t/p/w500' . $result['poster_path'],
+                'releaseYear' =>  date('Y', strtotime($result['first_air_date']))
+            ];
+        }
+
+        return $featured;
+    }
+
     public function getTrendingMoviesAndShows(): array
     {
         return [

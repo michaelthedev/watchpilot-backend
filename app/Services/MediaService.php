@@ -40,6 +40,18 @@ class MediaService
         }
     }
 
+    public static function getFeaturedMoviesAndShows(): array
+    {
+        try {
+            $provider = self::getProvider();
+            return $provider
+                ->getFeaturedMoviesAndShows();
+        } catch (\Exception) {
+            return [];
+        }
+    }
+
+
     public static function getMovieDetail(int $id): ?MovieDetail
     {
         try {
