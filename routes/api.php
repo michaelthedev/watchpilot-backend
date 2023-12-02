@@ -5,10 +5,17 @@ declare(strict_types=1);
 use App\Controllers\ApiController;
 use App\Controllers\AuthController;
 
+use App\Controllers\DiscoverController;
 use App\Controllers\UserController;
 use App\Controllers\WatchlistController;
 use App\Middlewares\Auth;
+
 use Pecee\SimpleRouter\SimpleRouter as Router;
+
+// CORS headers
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
 
 // API Routes start with /api
 Router::group(['prefix' => '/api'], function () {
@@ -19,7 +26,11 @@ Router::group(['prefix' => '/api'], function () {
         Router::post('/register', [AuthController::class, 'register']);
     });
 
-    Router::get('/getFeaturedAndTrending', [ApiController::class, 'featuredAndTrending']);
+    Router::group(['prefix' => '/discover'], function () {
+        Router::get('/trending', [DiscoverController::class, 'trending']);
+        Router::get('/featured', [DiscoverController::class, 'featured']);
+        Router::get('/airing', [DiscoverController::class, 'airing']);
+    });
 
     Router::get('/movie/{id}', [ApiController::class, 'movieDetail']);
     Router::get('/tv/{id}', [ApiController::class, 'tvDetail']);

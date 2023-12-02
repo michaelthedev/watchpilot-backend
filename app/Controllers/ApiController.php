@@ -24,27 +24,6 @@ final class ApiController
         ]);
     }
 
-    public function featuredAndTrending(): void
-    {
-        $trending = MediaService::getTrendingMoviesAndShows();
-
-        if (!$trending) {
-            response()->json([
-                'error' => true,
-                'message' => 'Unable to fetch trending movies and shows'
-            ]);
-        }
-
-        response()->json([
-            'error' => false,
-            'message' => 'Trending and Featured Movies',
-            'data' => [
-                'featured' => [],
-                'trending' => $trending
-            ]
-        ]);
-    }
-
     /**
      * Fetch Details about a movie
      * @param int $id Movie Id
