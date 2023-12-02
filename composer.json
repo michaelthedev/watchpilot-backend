@@ -15,7 +15,9 @@
     "rakit/validation": "^1.4",
     "firebase/php-jwt": "^6.8",
     "logadapp/http": "^0.4.2",
-    "symfony/console": "^6.4"
+    "symfony/console": "^6.4",
+    "guzzlehttp/guzzle": "^7.8",
+    "vlucas/phpdotenv": "^5.6"
   },
   "autoload": {
     "psr-4": {
@@ -24,13 +26,5 @@
     "files": [
       "app/Helpers/general.php"
     ]
-  },
-  "require-dev": {
-    "nunomaduro/phpinsights": "^2.11"
-  },
-  "config": {
-    "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    }
   }
 }
