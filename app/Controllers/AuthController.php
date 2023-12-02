@@ -26,7 +26,8 @@ final class AuthController
         ]);
 
         $loginRes = AuthService::login(
-            input('username'), input('password')
+            input('username'),
+            input('password')
         );
         $status = $loginRes['error'] ? 401 : 200;
 
