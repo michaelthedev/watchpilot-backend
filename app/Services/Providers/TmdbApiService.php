@@ -189,7 +189,7 @@ final class TmdbApiService implements ApiProviderInterface
         foreach ($response['results'] as $result) {
             $aring[] = [
                 'id' => $result['id'],
-                'type' => 'tv',
+                'type' => 'movie',
 				'title' => htmlentities($result['title']),
 				'overview' => htmlentities(substr($result['overview'], 0, 100)),
 				'rating' => $result['vote_average'],
