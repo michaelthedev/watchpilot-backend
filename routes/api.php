@@ -6,6 +6,7 @@ use App\Controllers\ApiController;
 use App\Controllers\AuthController;
 
 use App\Controllers\DiscoverController;
+use App\Controllers\MediaController;
 use App\Controllers\UserController;
 use App\Controllers\WatchlistController;
 use App\Middlewares\Auth;
@@ -32,10 +33,10 @@ Router::group(['prefix' => '/api'], function () {
         Router::get('/airing', [DiscoverController::class, 'airing']);
     });
 
-    Router::get('/movie/{id}', [ApiController::class, 'movieDetail']);
-    Router::get('/tv/{id}', [ApiController::class, 'tvDetail']);
+    Router::get('/movie/{id}', [MediaController::class, 'movieDetail']);
+    Router::get('/tv/{id}', [MediaController::class, 'tvDetail']);
 
-    Router::get('/search', [ApiController::class, 'search']);
+    Router::get('/search', [MediaController::class, 'search']);
 
     Router::group(['middleware' => Auth::class], function () {
 
