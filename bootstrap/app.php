@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 // Application base path
+use App\Services\Cache;
+
 define("BASE_PATH", dirname(__FILE__, 2));
 
 // Include the composer autoloader
@@ -18,4 +20,6 @@ require __DIR__.'/dependencies.php';
 
 // Default timezone
 date_default_timezone_set(config('app.timezone'));
+
+Cache::boot();
 
