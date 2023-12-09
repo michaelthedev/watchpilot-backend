@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
+use App\Commands\ClearCache;
 use App\Commands\StartServer;
 use Symfony\Component\Console\Application;
 
@@ -11,6 +12,7 @@ $application = new Application();
 try {
 
     $application->add(new StartServer());
+	$application->add(new ClearCache());
 
     $application->run();
 
