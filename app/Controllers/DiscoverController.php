@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Services\Cache;
 use App\Services\MediaService;
 
 /**
@@ -24,8 +25,10 @@ final class DiscoverController
 
     public function trending(): void
     {
-        $trending = $this->mediaService
-			->getTrending();
+		$trending = Cache::getOrSet('media.discover.trending', function () {
+			return $this->mediaService
+				->getTrending();
+		}, 86400);
 
         response()->json([
             'error' => false,
@@ -36,8 +39,10 @@ final class DiscoverController
 
     public function featured(): void
     {
-        $featured = $this->mediaService
-			->getFeatured();
+		$featured = Cache::getOrSet('media.discover.featured', function () {
+			return $this->mediaService
+				->getFeatured();
+		}, 86400);
 
         response()->json([
             'error' => false,
@@ -48,8 +53,11 @@ final class DiscoverController
 
     public function airing(): void
     {
-        $airing = $this->mediaService
-			->getAiring(input('timezone'));
+		$airing = Cache::getOrSet('media.discover.airing.'.str_replace(' ', '_', input('timezone')), function () {
+			return $this->mediaService
+				->getAiring(input('timezone'));
+		}, 86400);
+
 
         response()->json([
             'error' => false,
