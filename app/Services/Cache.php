@@ -6,18 +6,17 @@ namespace App\Services;
 
 use App\Services\Cache\CacheInterface;
 use App\Services\Cache\SymfonyCache;
+use Closure;
 
 final class Cache
 {
 	private static CacheInterface $cache;
-	// private static int $expiry;
 
 	public static function boot(): void
 	{
 		$driver = config('cache.driver');
 		$options = config("cache.stores.$driver") ?? [];
 
-		// self::$expiry = (int) config('cache.expiry');
 		self::$cache = new SymfonyCache($driver, $options);
 	}
 
@@ -41,7 +40,11 @@ final class Cache
 		self::$cache->delete($key);
 	}
 
-	public static function getOrSet(string $key, \Closure $param, int $expiry = 3600): mixed
+	public static function getOrSet(
+		string $key,
+		Closure $param,
+		int $expiry = 3600
+	): mixed
 	{
 		if (self::exists($key)) {
 			return self::get($key);

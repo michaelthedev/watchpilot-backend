@@ -25,7 +25,7 @@ final class DiscoverController
 
     public function trending(): void
     {
-		$trending = Cache::getOrSet('media.discover.trending', function () {
+		$trending = Cache::getOrSet('discover.trending', function () {
 			return $this->mediaService
 				->getTrending();
 		}, 86400);
@@ -39,7 +39,7 @@ final class DiscoverController
 
     public function featured(): void
     {
-		$featured = Cache::getOrSet('media.discover.featured', function () {
+		$featured = Cache::getOrSet('discover.featured', function () {
 			return $this->mediaService
 				->getFeatured();
 		}, 86400);
@@ -53,7 +53,7 @@ final class DiscoverController
 
     public function airing(): void
     {
-		$airing = Cache::getOrSet('media.discover.airing.'.str_replace(' ', '_', input('timezone')), function () {
+		$airing = Cache::getOrSet('discover.airing.'.str_replace(' ', '_', input('timezone') ?? ''), function () {
 			return $this->mediaService
 				->getAiring(input('timezone'));
 		}, 86400);
