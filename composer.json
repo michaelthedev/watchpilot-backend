@@ -10,7 +10,7 @@
   ],
   "require": {
     "php": ">=8.1",
-    "pecee/simple-router": "5.3.0.5",
+    "pecee/simple-router": "^5.3.0.5",
     "illuminate/database": "^10.20",
     "rakit/validation": "^1.4",
     "firebase/php-jwt": "^6.8",
