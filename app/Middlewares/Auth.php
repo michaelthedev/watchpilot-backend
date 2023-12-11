@@ -21,7 +21,7 @@ final class Auth implements IMiddleware
         $token = $this->getBearerToken();
         if (empty($token)) {
             response()
-                ->httpCode(403)
+                ->httpCode(401)
                 ->json([
                     'error' => true,
                     'message' => 'Unauthorized'
@@ -32,7 +32,7 @@ final class Auth implements IMiddleware
         $request->user = AuthService::authenticate($token);
         if ($request->user === null) {
             response()
-                ->httpCode(403)
+                ->httpCode(401)
                 ->json([
                     'error' => true,
                     'message' => 'Unauthorized'

@@ -70,7 +70,7 @@ final class JwtService
                 $token,
                 new Key($secretKey, 'HS512')
             );
-        } catch (ExpiredException) {
+        } catch (\Exception) {
             return false;
         }
 
