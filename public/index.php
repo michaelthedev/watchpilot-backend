@@ -7,4 +7,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = require __DIR__ . '/../bootstrap/app.php';
 
+$app->loadRoutes([
+	ROUTES_PATH . '/api.php'
+]);
+
 $app->boot(true);
