@@ -17,7 +17,7 @@ class Log
 	public static function boot(): void
 	{
 		$logger = new Logger('app');
-		$rotating_handler = new RotatingFileHandler(LOGS_PATH.'/app.log', 30, Level::Debug);
+		$rotating_handler = new RotatingFileHandler(LOGS_PATH.'/application/app.log', 30, Level::Debug);
 
 		$formatter = new JsonFormatter();
 		$rotating_handler->setFormatter($formatter);
