@@ -35,9 +35,9 @@ final class Cache
 		self::$cache->store($key, $value, $expiry);
 	}
 
-	public static function delete(string $key): void
+	public static function delete(string $key): bool
 	{
-		self::$cache->delete($key);
+		return self::$cache->delete($key);
 	}
 
 	public static function getOrSet(
@@ -59,5 +59,10 @@ final class Cache
 	public static function deleteAll(): void
 	{
 		self::$cache->deleteAll();
+	}
+
+	public static function prune(): bool
+	{
+		return self::$cache->prune();
 	}
 }

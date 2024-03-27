@@ -3,6 +3,7 @@
 
 use App\Commands\ClearCache;
 use App\Commands\Database\Migrate;
+use App\Commands\DeleteCache;
 use App\Commands\PruneCache;
 use App\Commands\StartServer;
 use Symfony\Component\Console\Application;
@@ -20,7 +21,8 @@ try {
 		new Migrate(),
 		new StartServer(),
 		new ClearCache(),
-		new PruneCache()
+		new PruneCache(),
+		new DeleteCache()
 	]);
 
     $console->run();
