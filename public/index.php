@@ -1,29 +1,10 @@
 <?php
 
-use Pecee\SimpleRouter\Exceptions\NotFoundHttpException;
-use Pecee\SimpleRouter\SimpleRouter;
+declare(strict_types=1);
 
 // Include the composer autoloader
-require dirname(__FILE__, 2) . '/bootstrap/app.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-SimpleRouter::enableMultiRouteRendering(false);
+$app = require __DIR__ . '/../bootstrap/app.php';
 
-// Include routes
-require ROUTES_PATH . '/api.php';
-
-try {
-    SimpleRouter::start();
-} catch (NotFoundHttpException) {
-
-    // Display custom 404 page
-    http_response_code(404);
-
-    if (request()->isFormatAccepted('application/json')) {
-        response()->httpCode(404)->json([
-            'error' => true,
-            'message' => $e->getMessage()
-        ]);
-    }
-
-    echo '404 - Page not found';
-}
+$app->boot(true);

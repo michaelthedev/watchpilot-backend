@@ -6,7 +6,7 @@ namespace App\Exceptions;
 
 use Exception;
 
-class ValidationException extends Exception
+class ApplicationException extends Exception
 {
     public function __construct($message)
     {
