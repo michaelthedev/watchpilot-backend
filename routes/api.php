@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Controllers\ApiController;
-use App\Controllers\AuthController;
-
-use App\Controllers\DiscoverController;
-use App\Controllers\MediaController;
-use App\Controllers\UserController;
-use App\Controllers\WatchlistController;
+use app\Controllers\Api\ApiController;
+use app\Controllers\Api\AuthController;
+use app\Controllers\Api\DiscoverController;
+use app\Controllers\Api\MediaController;
+use app\Controllers\Api\UserController;
+use app\Controllers\Api\WatchlistController;
 use App\Middlewares\Auth;
-
 use Pecee\SimpleRouter\SimpleRouter as Router;
 
 // CORS headers

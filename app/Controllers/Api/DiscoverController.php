@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controllers;
+namespace app\Controllers\Api;
 
 use App\Services\Cache;
 use App\Services\MediaService;

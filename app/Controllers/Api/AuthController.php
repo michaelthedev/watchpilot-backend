@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controllers;
+namespace app\Controllers\Api;
 
 use App\Exceptions\ValidationException;
 use App\Models\User;
