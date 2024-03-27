@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\Encryption;
+use Carbon\Carbon;
 use Pecee\Http\Input\InputHandler;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 use Pecee\Http\Url;
@@ -75,27 +77,25 @@ function csrf_token(): ?string
     return $baseVerifier?->getTokenProvider()->getToken();
 }
 
-function validate(array $rules, ?array $data = null): void
+function validate(array $rules, ?array $data = null): array
 {
-    $validator = new Validator;
-    $validation = $validator->validate($data ?? input()->getOriginalPost(), $rules, [
-        'required' => ':attribute is required',
-        'email' => ':attribute must be a valid email address',
-        'numeric' => ':attribute must be numeric',
-    ]);
+	$validator = new Validator;
+	$validation = $validator->validate($data ?? (input()->getOriginalPost() + $_FILES), $rules, [
+		'required' => ':attribute is required',
+		'email' => ':attribute must be a valid email address',
+		'numeric' => ':attribute must be numeric',
+		'in' => ':attribute must be one of :allowed_values',
+	]);
 
-    if ($validation->fails()) {
-        $errorMessage = "";
-        foreach ($validation->errors()->firstOfAll() as $errMsg) {
-            $errorMessage .= "$errMsg, ";
-        }
-        $errorMessage = rtrim($errorMessage, ', ');
+	if ($validation->fails()) {
+		$errorMessage = implode('; ', $validation->errors()->all());
+		response()->httpCode(400)->json([
+			'error' => true,
+			'message' => $errorMessage,
+		]);
+	}
 
-        response()->httpCode(400)->json([
-            'error' => true,
-            'message' => $errorMessage,
-        ]);
-    }
+	return $validation->getValidData();
 }
 
 function config(string $configKey, $default = ''): string|array
@@ -120,4 +120,41 @@ function isValidDate(string $date, string $format = 'd-m-Y'): bool
 {
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) === $date;
+}
+
+function uploads_path(string $path): string
+{
+	return 'uploads/'.$path;
+}
+
+if (!function_exists('encrypt')) {
+	function encrypt(mixed $data): string
+	{
+		$service = new Encryption();
+
+		return $service->encrypt($data);
+	}
+
+	function decrypt(mixed $data): string
+	{
+		$service = new Encryption();
+
+		return $service->decrypt($data);
+	}
+}
+
+function asset(string $path): string
+{
+	$baseUrl = config('app.assetBase');
+	return $baseUrl .'/'. $path;
+}
+
+function now(): Carbon
+{
+	return Carbon::now(config('app.timezone'));
+}
+
+function env(string $key, mixed $default = null): mixed
+{
+	return $_ENV[$key] ?? $default;
 }
