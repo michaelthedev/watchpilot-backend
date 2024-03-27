@@ -1,13 +1,11 @@
 <?php
 
 return [
-    'name' => 'WatchPilot',
-    'url' => 'https://www.watchpilot.test',
-    'timezone' => 'Africa/Lagos',
-    'apiProvider' => 'tmdb',
-    'providers' => [
-        'tmdb' => [
-            'apiKey' => $_ENV['TMDB_API_KEY'],
-        ]
-    ]
+	'env' => env('APP_ENV'),
+	'name' => env('APP_NAME'),
+	'url' => env('APP_URL'),
+	'assetBase' => env('APP_ASSET_BASE'),
+	'domain' => env('APP_DOMAIN'),
+	'timezone' => env('APP_TIMEZONE'),
+	'currencySymbol' => '₦',
 ];
