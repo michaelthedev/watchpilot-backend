@@ -18,9 +18,15 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Authorization');
 
+$method = $_SERVER['REQUEST_METHOD'];
+if ($method == "OPTIONS") {
+	// header("HTTP/1.1 200 OK");
+	die();
+}
+
 // API Routes start with /api
 Router::group(['prefix' => '/api'], function () {
-    Router::get('/', [ApiController::class, 'index']);
+    Router::get('/ping', [ApiController::class, 'pong']);
 
     Router::group(['prefix' => '/auth'], function () {
         Router::post('/login', [AuthController::class, 'login']);
@@ -38,6 +44,7 @@ Router::group(['prefix' => '/api'], function () {
 
     Router::get('/search', [MediaController::class, 'search']);
 
+	/** Logged in routes */
     Router::group(['middleware' => Auth::class], function () {
 
         Router::group(['prefix' => '/user'], function () {
