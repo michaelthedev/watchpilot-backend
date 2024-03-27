@@ -153,8 +153,3 @@ function now(): Carbon
 {
 	return Carbon::now(config('app.timezone'));
 }
-
-function env(string $key, mixed $default = null): mixed
-{
-	return $_ENV[$key] ?? $default;
-}

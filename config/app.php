@@ -1,11 +1,11 @@
 <?php
 
 return [
-	'env' => env('APP_ENV'),
-	'name' => env('APP_NAME'),
-	'url' => env('APP_URL'),
-	'assetBase' => env('APP_ASSET_BASE'),
-	'domain' => env('APP_DOMAIN'),
-	'timezone' => env('APP_TIMEZONE'),
+	'env' => $_ENV['APP_ENV'],
+	'name' => $_ENV['APP_NAME'],
+	'url' => $_ENV['APP_URL'],
+	'assetBase' => $_ENV['APP_ASSET_BASE'],
+	'domain' => $_ENV['APP_DOMAIN'],
+	'timezone' => $_ENV['APP_TIMEZONE'],
 	'currencySymbol' => '₦',
 ];
