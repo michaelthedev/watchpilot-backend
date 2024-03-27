@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use app\Controllers\Api\ApiController;
-use app\Controllers\Api\AuthController;
-use app\Controllers\Api\DiscoverController;
-use app\Controllers\Api\MediaController;
-use app\Controllers\Api\UserController;
-use app\Controllers\Api\WatchlistController;
+use App\Controllers\Api\ApiController;
+use App\Controllers\Api\AuthController;
+use App\Controllers\Api\DiscoverController;
+use App\Controllers\Api\MediaController;
+use App\Controllers\Api\UserController;
+use App\Controllers\Api\WatchlistController;
 use App\Middlewares\Auth;
 use Pecee\SimpleRouter\SimpleRouter as Router;
 
