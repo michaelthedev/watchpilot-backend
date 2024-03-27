@@ -9,18 +9,14 @@ use App\Interfaces\ApiProviderInterface;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
-use LogadApp\Http\Http;
+use GuzzleHttp\Exception\GuzzleException;
 
 final class TmdbApiService implements ApiProviderInterface
 {
-    private string $apiKey;
-    private string $baseUrl = 'https://api.themoviedb.org/3';
 	private Client $client;
 
 	public function __construct()
     {
-        $this->apiKey = config('tmdb.api_key');
-
 		$this->client = new Client([
 			'base_uri' => config('tmdb.base_url').'/',
 			'headers' => [
@@ -112,11 +108,13 @@ final class TmdbApiService implements ApiProviderInterface
     private function getTrendingMovies(string $period = 'day'): array
     {
         $trending = [];
-        $request = Http::get($this->baseUrl .'/trending/movie/' .$period. '?with_original_language=en')
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('trending/movie/'.$period, [
+			'query' => [
+				'with_original_language' => 'en'
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
             $trending[] = [
                 'id' => $result['id'],
@@ -135,11 +133,13 @@ final class TmdbApiService implements ApiProviderInterface
     private function getTrendingShows(string $period = 'day'): array
     {
         $trending = [];
-        $request = Http::get($this->baseUrl .'/trending/tv/' .$period. '?with_original_language=en')
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('trending/tv/'.$period, [
+			'query' => [
+				'with_original_language' => 'en'
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
             $trending[] = [
                 'id' => $result['id'],
@@ -166,11 +166,17 @@ final class TmdbApiService implements ApiProviderInterface
 		$beginningOfWeek = $date->startOfWeek()->format('Y-m-d');
 		$endOfWeek = $date->endOfWeek()->format('Y-m-d');
 
-		$request = Http::get($this->baseUrl .'/discover/tv?air_date.gte='.$beginningOfWeek.'&air_date.lte='.$endOfWeek.'&sort_by=popularity.desc&with_original_language=en&timezone=' .$timezone)
-			->withToken($this->apiKey)
-			->send();
+		$request = $this->client->get('discover/tv', [
+			'query' => [
+				'air_date.gte' => $beginningOfWeek,
+				'air_date.lte' => $endOfWeek,
+				'sort_by' => 'popularity.desc',
+				'with_original_language' => 'en',
+				'timezone' => $timezone
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
             $aring[] = [
                 'id' => $result['id'],
@@ -197,11 +203,17 @@ final class TmdbApiService implements ApiProviderInterface
 		$beginningOfWeek = $date->startOfWeek()->format('Y-m-d');
 		$endOfWeek = $date->endOfWeek()->format('Y-m-d');
 
-        $request = Http::get($this->baseUrl .'/discover/movie?air_date.gte='.$beginningOfWeek.'&air_date.lte='.$endOfWeek.'&sort_by=popularity.desc&with_original_language=en&timezone=' .$timezone)
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('discover/movie', [
+			'query' => [
+				'air_date.gte' => $beginningOfWeek,
+				'air_date.lte' => $endOfWeek,
+				'sort_by' => 'popularity.desc',
+				'with_original_language' => 'en',
+				'timezone' => $timezone
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
             $aring[] = [
                 'id' => $result['id'],
@@ -229,16 +241,17 @@ final class TmdbApiService implements ApiProviderInterface
      * Get details about a movie
      * @param int $id
      * @return MovieDetail
-     * @throws Exception
-     */
+     * @throws Exception|GuzzleException
+	 */
     public function getMovieDetails(int $id): MovieDetail
     {
-        $request = Http::get($this->baseUrl .'/movie/' .$id. '?append_to_response=videos')
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('movie/'.$id, [
+			'query' => [
+				'append_to_response' => 'videos'
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
-		print_r($response);
+        $response = json_decode($request->getBody()->getContents(), true);
         return new MovieDetail(
             id: $response['id'],
             type: 'movie',
@@ -256,19 +269,11 @@ final class TmdbApiService implements ApiProviderInterface
         );
     }
 
-    /**
-     * Get details about a movie
-     * @param int $id
-     * @return TvDetail
-     * @throws Exception
-     */
     public function getTvDetails(int $id): TvDetail
     {
-        $request = Http::get($this->baseUrl .'/tv/' .$id)
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('tv/'.$id);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
 
         // Last episode
         $lastEpisodeDto = $this->getEpisodeDto($response['last_episode_to_air']);
@@ -327,11 +332,13 @@ final class TmdbApiService implements ApiProviderInterface
             default => $type,
         };
 
-        $request = Http::get($this->baseUrl .'/search/' .$type. '?query=' .$query)
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('search/'.$type, [
+			'query' => [
+				'query' => $query
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
         $results = [];
         foreach ($response['results'] as $result) {
             if (empty($result['poster_path'])) continue;
