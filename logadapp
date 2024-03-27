@@ -2,19 +2,28 @@
 <?php
 
 use App\Commands\ClearCache;
+use App\Commands\Database\Migrate;
+use App\Commands\PruneCache;
 use App\Commands\StartServer;
 use Symfony\Component\Console\Application;
 
-require __DIR__.'/bootstrap/app.php';
+// Include the composer autoloader
+require __DIR__ . '/vendor/autoload.php';
 
-$application = new Application();
+$app = require __DIR__.'/bootstrap/app.php';
+$app->boot();
+
+$console = new Application();
 
 try {
+	$console->addCommands([
+		new Migrate(),
+		new StartServer(),
+		new ClearCache(),
+		new PruneCache()
+	]);
 
-    $application->add(new StartServer());
-	$application->add(new ClearCache());
-
-    $application->run();
+    $console->run();
 
 } catch (Exception $e) {
     print($e->getMessage());
