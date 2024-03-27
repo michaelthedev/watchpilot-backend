@@ -16,7 +16,7 @@ use Exception;
  * @package App\Services
  * @author Michael Arawole<michael@logad.net>
  */
-class MediaService
+final class MediaService
 {
 	private ApiProviderInterface $provider;
 
@@ -25,14 +25,13 @@ class MediaService
 	 */
 	public function __construct()
 	{
-		$currentProvider = config('app.apiProvider');
-		$providers = config('app.providers');
-		$apiKey = $providers[$currentProvider]['apiKey'] ?? null;
+		$providerClass = config('providers.media_db');
 
-		$this->provider = match ($currentProvider) {
-			'tmdb' => new TmdbApiService($apiKey),
-			default => throw new Exception('Invalid API provider'),
-		};
+		if (empty($providerClass)) {
+			throw new Exception('Invalid API provider');
+		}
+
+		$this->provider = new $providerClass();
 	}
 
     public function getTrending(): array
@@ -50,7 +49,12 @@ class MediaService
         try {
             return $this->provider
                 ->getFeaturedMoviesAndShows();
-        } catch (Exception) {
+        } catch (Exception $e) {
+			Log::channel('mediaService')->error('getFeatures()', [
+				'exception' => $e,
+				'trace' => $e->getTraceAsString()
+			]);
+
             return [];
         }
     }

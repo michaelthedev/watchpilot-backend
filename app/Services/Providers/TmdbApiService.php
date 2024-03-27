@@ -8,16 +8,25 @@ use App\DTO\TvEpisode;
 use App\Interfaces\ApiProviderInterface;
 use Carbon\Carbon;
 use Exception;
+use GuzzleHttp\Client;
 use LogadApp\Http\Http;
 
 final class TmdbApiService implements ApiProviderInterface
 {
     private string $apiKey;
     private string $baseUrl = 'https://api.themoviedb.org/3';
+	private Client $client;
 
-    public function __construct(string $apiKey)
+	public function __construct()
     {
-        $this->apiKey = $apiKey;
+        $this->apiKey = config('tmdb.api_key');
+
+		$this->client = new Client([
+			'base_uri' => config('tmdb.base_url').'/',
+			'headers' => [
+				'Authorization' => 'Bearer '.config('tmdb.api_key')
+			],
+		]);
     }
 
     private function formatReleaseDate(string $releaseDate): string
@@ -42,11 +51,15 @@ final class TmdbApiService implements ApiProviderInterface
     private function getFeaturedMovies(): array
     {
         $featured = [];
-        $request = Http::get($this->baseUrl .'/discover/movie?with_original_language=en&sort_by=popularity.desc&with_release_type=2|3')
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('discover/movie', [
+			'query' => [
+				'with_original_language' => 'en',
+				'sort_by' => 'popularity.desc',
+				'with_release_type' => '2|3'
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
             $featured[] = [
                 'id' => $result['id'],
@@ -65,11 +78,14 @@ final class TmdbApiService implements ApiProviderInterface
     private function getFeaturedShows(): array
     {
         $featured = [];
-        $request = Http::get($this->baseUrl .'/discover/tv?with_original_language=en&sort_by=popularity.desc')
-            ->withToken($this->apiKey)
-            ->send();
+		$request = $this->client->get('discover/tv', [
+			'query' => [
+				'with_original_language' => 'en',
+				'sort_by' => 'popularity.desc'
+			]
+		]);
 
-        $response = json_decode($request->body(), true);
+        $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
             $featured[] = [
                 'id' => $result['id'],
@@ -108,7 +124,7 @@ final class TmdbApiService implements ApiProviderInterface
                 'title' => htmlentities($result['title']),
                 'overview' => htmlentities(substr($result['overview'], 30)),
                 'rating' => $result['vote_average'],
-                'imageUrl' => 'https://image.tmdb.org/t/p/w500' . $result['poster_path'],
+				'imageUrl' => $this->formatImageUrl($result['poster_path']),
                 'releaseYear' =>  date('Y', strtotime($result['release_date']))
             ];
         }
@@ -217,11 +233,12 @@ final class TmdbApiService implements ApiProviderInterface
      */
     public function getMovieDetails(int $id): MovieDetail
     {
-        $request = Http::get($this->baseUrl .'/movie/' .$id)
+        $request = Http::get($this->baseUrl .'/movie/' .$id. '?append_to_response=videos')
             ->withToken($this->apiKey)
             ->send();
 
         $response = json_decode($request->body(), true);
+		print_r($response);
         return new MovieDetail(
             id: $response['id'],
             type: 'movie',
@@ -233,6 +250,7 @@ final class TmdbApiService implements ApiProviderInterface
             overview: $response['overview'],
             imageUrl: $this->formatImageUrl($response['poster_path']),
             releaseDate: $response['release_date'],
+			trailerUrl: $response['video'],
             backdropUrl: $this->formatImageUrl($response['backdrop_path'], true),
             releaseYear: $this->formatReleaseDate($response['release_date'])
         );
@@ -331,3 +349,4 @@ final class TmdbApiService implements ApiProviderInterface
         return $results;
     }
 }
+
