@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTO;
+
+use App\Interfaces\DTO;
 
 /**
  * Movie Data Transfer Object
  * @package App\DTO
  * @author Michael A. <michael@logad.net>
  */
-final class MovieDetail
+final class MovieDetail implements DTO
 {
     public function __construct(
         public int $id,
@@ -26,4 +30,9 @@ final class MovieDetail
     {
         $this->rating = round($this->rating, 2);
     }
+
+	public function toArray(): array
+	{
+		return get_object_vars($this);
+	}
 }
