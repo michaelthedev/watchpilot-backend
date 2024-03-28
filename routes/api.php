@@ -44,6 +44,7 @@ Router::group(['prefix' => '/api'], function () {
 
 	/** Logged in routes */
     Router::group(['middleware' => Auth::class], function () {
+		Router::patch('/auth/validate', [AuthController::class, 'validateToken']);
 
         Router::group(['prefix' => '/user'], function () {
             Router::get('/', [UserController::class, 'index']);

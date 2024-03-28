@@ -16,7 +16,7 @@ use App\Services\Auth\AuthService;
  * @package App\Controllers
  * @author Michael Arawole <michael@logad.net>
  */
-final class AuthController
+final class AuthController extends ApiController
 {
     public function login(): void
     {
@@ -62,4 +62,9 @@ final class AuthController
             'message' => 'Registration Successful'
         ]);
     }
+
+	public function validateToken(): void
+	{
+
+	}
 }
