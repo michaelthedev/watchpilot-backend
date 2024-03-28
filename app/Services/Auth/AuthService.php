@@ -50,11 +50,10 @@ final class AuthService
     public static function authenticate(string $token): ?User
     {
         $verify = JwtService::verify($token);
-        if (empty($verify['token'])) {
-            return null;
-        }
 
-        return User::where('remember_token', $verify['token'])->first();
+        return !empty($verify['token'])
+			? User::where('remember_token', $verify['token'])->first()
+			: null;
     }
 
     private static function generateToken(): string

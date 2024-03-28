@@ -24,7 +24,7 @@ final class Auth implements IMiddleware
                 ->httpCode(401)
                 ->json([
                     'error' => true,
-                    'message' => 'Unauthorized'
+                    'message' => 'Missing Authorization header'
                 ]);
         }
 
