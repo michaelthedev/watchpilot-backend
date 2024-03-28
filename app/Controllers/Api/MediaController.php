@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers\Api;
 
+use App\Services\Cache;
 use App\Services\MediaService;
 
 /**
@@ -12,7 +13,7 @@ use App\Services\MediaService;
  * @package App\Controllers
  * @author Michael Arawole <michael@logad.net>
  */
-final class MediaController
+final class MediaController extends ApiController
 {
 	private MediaService $mediaService;
 
@@ -28,12 +29,16 @@ final class MediaController
      */
     public function movieDetail(int $id): void
     {
-        response()->json([
-            'error' => false,
-            'message' => 'success',
-            'data' => $this->mediaService
-				->getMovieDetail($id)
-        ]);
+		$movie = Cache::getOrSet('movieDetail_'.$id, function () use($id) {
+			return $this->mediaService
+				->getMovieDetail($id);
+		});
+
+		if (!empty($movie)) {
+			$this->success('success', $movie->toArray());
+		} else {
+			$this->error('Failed to get movie detail');
+		}
     }
 
     /**
