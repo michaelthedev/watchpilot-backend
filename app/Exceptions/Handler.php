@@ -13,6 +13,7 @@ class Handler
 	 * Don't log exceptions but render
 	 */
 	private array $dontLog = [
+		ValidationException::class,
 		ApplicationException::class
 	];
 
