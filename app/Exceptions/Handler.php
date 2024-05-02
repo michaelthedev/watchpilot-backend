@@ -60,7 +60,12 @@ class Handler
 	{
 		if (!in_array(get_class($e), $this->dontLog)) {
 			Log::critical('An exception occurred', [
-				'e' => $e
+				'e' => $e,
+				'request' => [
+					'url' => (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]",
+					'method' => request()->getMethod(),
+					'ip' => request()->getIp(true)
+				],
 			]);
 		}
 	}
