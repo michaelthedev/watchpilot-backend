@@ -37,8 +37,11 @@ Router::group(['prefix' => '/api'], function () {
         Router::get('/airing', [DiscoverController::class, 'airing']);
     });
 
-    Router::get('/movie/{id}', [MediaController::class, 'movieDetail']);
     Router::get('/tv/{id}', [MediaController::class, 'tvDetail']);
+    Router::get('/movie/{id}', [MediaController::class, 'movieDetail']);
+
+    Router::get('/{type}/{id}/related', [MediaController::class, 'related']);
+    Router::get('/{type}/{id}/providers', [MediaController::class, 'watchProviders']);
 
     Router::get('/search', [MediaController::class, 'search']);
 

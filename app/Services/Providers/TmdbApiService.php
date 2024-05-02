@@ -4,7 +4,6 @@ namespace App\Services\Providers;
 
 use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
-use App\DTO\TvEpisode;
 use App\Interfaces\ApiProviderInterface;
 use App\Services\Providers\Tmdb\TmdbTransformer;
 use Carbon\Carbon;
@@ -263,6 +262,37 @@ final class TmdbApiService implements ApiProviderInterface
 			->transform($response)
 			->to('movie');
     }
+
+	public function getWatchProviders(string $type, int $id): array
+	{
+		// $request = $this->client->get($type .'/'. $id .'/watch/providers');
+
+		// $response = json_decode($request->getBody()
+			// ->getContents(), true);
+
+		return [];
+	}
+
+	public function getRelated(string $type, int $id): array
+	{
+		$request = $this->client->get($type .'/'. $id .'/recommendations', [
+			'query' => [
+				'language' => 'en-US'
+			]
+		]);
+
+		$response = json_decode($request->getBody()
+			->getContents(), true);
+
+		$related = [];
+		foreach ($response['results'] as $result) {
+			$related[] = $this->transformer
+				->transform($result)
+				->to($type.'Summary');
+		}
+
+		return $related;
+	}
 
     public function getTvDetails(int $id): TvDetail
     {

@@ -50,6 +50,26 @@ final class MediaController extends ApiController
 		}
     }
 
+	public function watchProviders(string $type, int $id): void
+	{
+		$providers = $this->mediaService
+			->watchProviders($type, $id);
+
+		if (!empty($providers)) {
+			$this->success('success', $providers);
+		} else {
+			$this->error('Failed to get watch providers');
+		}
+	}
+
+	public function related(string $type, int $id): void
+	{
+		$related = $this->mediaService
+			->getRelated($type, $id);
+
+		$this->success('success', $related);
+	}
+
     public function search(): void
     {
         validate([

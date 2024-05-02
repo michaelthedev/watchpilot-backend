@@ -64,6 +64,18 @@ final class MediaService
 			->getTvDetails($id);
     }
 
+	public function watchProviders(string $type, int $id): array
+	{
+		return $this->provider
+			->getWatchProviders($type, $id);
+	}
+
+	public function getRelated(string $type, int $id): array
+	{
+		return $this->provider
+			->getRelated($type, $id);
+	}
+
     public function search(string $query, string $type): ?array
     {
 		return $this->provider
