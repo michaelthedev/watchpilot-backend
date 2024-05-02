@@ -22,11 +22,6 @@ final class MediaController extends ApiController
 		$this->mediaService = new MediaService();
 	}
 
-    /**
-     * Fetch Details about a movie
-     * @param int $id Movie Id
-     * @return void
-     */
     public function movieDetail(int $id): void
     {
 		$movie = Cache::getOrSet('movieDetail_'.$id, function () use($id) {
@@ -41,19 +36,18 @@ final class MediaController extends ApiController
 		}
     }
 
-    /**
-     * Fetch details about a tv show
-     * @param int $id Tv show id
-     * @return void
-     */
     public function tvDetail(int $id): void
     {
-        response()->json([
-            'error' => false,
-            'message' => 'success',
-            'data' => $this->mediaService
-				->getTvDetail($id)
-        ]);
+		$show = Cache::getOrSet('tvDetail_'.$id, function () use($id) {
+			return $this->mediaService
+				->getTvDetail($id);
+		});
+
+		if (!empty($show)) {
+			$this->success('success', $show->toArray());
+		} else {
+			$this->error('Failed to get show detail');
+		}
     }
 
     public function search(): void
