@@ -6,6 +6,7 @@ use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
 use App\DTO\TvEpisode;
 use App\Interfaces\ApiProviderInterface;
+use App\Services\Providers\Tmdb\TmdbTransformer;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
@@ -14,9 +15,13 @@ use GuzzleHttp\Exception\GuzzleException;
 final class TmdbApiService implements ApiProviderInterface
 {
 	private Client $client;
+	private TmdbTransformer $transformer;
 
 	public function __construct()
     {
+		// set transformer
+		$this->transformer = new TmdbTransformer();
+
 		$this->client = new Client([
 			'base_uri' => config('tmdb.base_url').'/',
 			'headers' => [
