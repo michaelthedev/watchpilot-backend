@@ -14,7 +14,7 @@ use App\Services\MediaService;
  * @package App\Controllers
  * @author Michael Arawole <michael@logad.net>
  */
-final class DiscoverController
+final class DiscoverController extends ApiController
 {
 	private MediaService $mediaService;
 
