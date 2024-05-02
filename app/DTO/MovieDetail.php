@@ -13,15 +13,17 @@ use App\Interfaces\DTO;
  */
 final class MovieDetail implements DTO
 {
+	public string $type = 'movie';
+
     public function __construct(
         public int $id,
-        public string $type,
         public string $title,
         public string $overview,
         public float $rating,
         public string $imageUrl,
         public int $releaseYear,
         public string $releaseDate,
+		public ?array $trailer = null,
         public ?string $backdropUrl = null,
         public ?string $tagline = null,
         public int $runtime = 0,
