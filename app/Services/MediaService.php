@@ -4,7 +4,6 @@ namespace App\Services;
 use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
 use App\Interfaces\ApiProviderInterface;
-use App\Services\Providers\TmdbApiService;
 use Exception;
 
 /**
@@ -36,70 +35,38 @@ final class MediaService
 
     public function getTrending(): array
     {
-        try {
-            return $this->provider
-                ->getTrendingMoviesAndShows();
-        } catch (Exception) {
-            return [];
-        }
+		return $this->provider
+			->getTrendingMoviesAndShows();
     }
 
     public function getFeatured(): array
     {
-        try {
-            return $this->provider
-                ->getFeaturedMoviesAndShows();
-        } catch (Exception $e) {
-			Log::channel('mediaService')->error('getFeatures()', [
-				'exception' => $e,
-				'trace' => $e->getTraceAsString()
-			]);
-
-            return [];
-        }
+		return $this->provider
+			->getFeaturedMoviesAndShows();
     }
 
 	public function getAiring(?string $timezone = null): array
 	{
-		$timezone = $timezone ?? 'UTC';
-		try {
-			return $this->provider
-				->getAiring($timezone);
-		} catch (Exception) {
-			return [];
-		}
+		return $this->provider
+			->getAiring($timezone ?? 'UTC');
 	}
 
 
-    public function getMovieDetail(int $id): ?MovieDetail
+    public function getMovieDetail(int $id): MovieDetail
     {
-        try {
-            $provider = $this->provider;
-            return $provider
-                ->getMovieDetails($id);
-        } catch (Exception) {
-             return null;
-        }
+		return $this->provider
+			->getMovieDetails($id);
     }
 
-    public function getTvDetail(int $id): ?TvDetail
+    public function getTvDetail(int $id): TvDetail
     {
-        try {
-            $provider = $this->provider;
-            return $provider
-                ->getTvDetails($id);
-        } catch (Exception) {
-             return null;
-        }
+		return $this->provider
+			->getTvDetails($id);
     }
 
     public function search(string $query, string $type): ?array
     {
-        try {
-            return $this->provider
-                ->search($query, $type);
-        } catch (Exception) {
-             return null;
-        }
+		return $this->provider
+			->search($query, $type);
     }
 }
