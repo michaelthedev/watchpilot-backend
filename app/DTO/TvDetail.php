@@ -9,30 +9,13 @@ namespace App\DTO;
  */
 final class TvDetail
 {
-    /**
-     * @param int $id
-     * @param string $type
-     * @param string $title
-     * @param string $overview
-     * @param int $seasons
-     * @param float $rating
-     * @param string $imageUrl
-     * @param int $releaseYear
-     * @param string $releaseDate
-     * @param string|null $backdropUrl
-     * @param string|null $tagline
-     * @param string|null $status status of the show (ended, ongoing..)
-     * @param int $runtime
-     * @param array $genres
-     * @param TvEpisode|null $lastEpisode
-     * @param TvEpisode|null $nextEpisode
-     */
-    public function __construct(
+	public string $type = 'tv';
+
+	public function __construct(
         public int $id,
-        public string $type,
         public string $title,
         public string $overview,
-        public int $seasons,
+        public array $seasons,
         public float $rating,
         public string $imageUrl,
         public int $releaseYear,
@@ -48,4 +31,9 @@ final class TvDetail
     {
         $this->rating = round($this->rating, 2);
     }
+
+	public function toArray(): array
+	{
+		return get_object_vars($this);
+	}
 }
