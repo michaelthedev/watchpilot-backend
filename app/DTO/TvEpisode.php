@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTO;
 
 /**
@@ -7,19 +9,8 @@ namespace App\DTO;
  * @package App\DTO
  * @author Michael A. <michael@logad.net>
  */
-class TvEpisode
+final class TvEpisode
 {
-    /**
-     * @param int $id
-     * @param string $title
-     * @param string $overview
-     * @param float $rating
-     * @param ?string $imageUrl
-     * @param int $season
-     * @param int $episode
-     * @param string $releaseDate
-     * @param ?int $runtime
-     */
     public function __construct(
         public int $id,
         public string $title,
