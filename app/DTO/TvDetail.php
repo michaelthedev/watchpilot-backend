@@ -18,7 +18,7 @@ final class TvDetail
         public array $seasons,
         public float $rating,
         public string $imageUrl,
-        public int $releaseYear,
+        public string $releaseYear,
         public string $releaseDate,
         public ?string $backdropUrl = null,
         public ?string $tagline = null,
