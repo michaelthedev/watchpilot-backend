@@ -73,6 +73,7 @@ final class TmdbTransformer
 			rating: $data['vote_average'],
 			status: $data['status'],
 			runtime: $data['episode_run_time'][0] ?? 0,
+			seasons_count: $data['number_of_seasons'],
 			seasons: $this->getSeasons($data['seasons']),
 			tagline: $data['tagline'],
 			overview: $data['overview'],

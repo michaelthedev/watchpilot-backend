@@ -20,6 +20,7 @@ final class TvDetail
         public string $imageUrl,
         public string $releaseYear,
         public string $releaseDate,
+		public int $seasons_count,
         public ?string $backdropUrl = null,
         public ?string $tagline = null,
         public ?string $status = null,
