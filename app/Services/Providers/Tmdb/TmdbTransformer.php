@@ -28,6 +28,7 @@ final class TmdbTransformer
 			'movie' => $this->transformMovie($this->data),
 			'tv' => $this->transformTv($this->data),
 			'movieSummary' => $this->transformMovieSummary($this->data),
+			'tvSummary' => $this->transformTvSummary($this->data),
 			default => throw new \Exception('Invalid type')
 		};
 	}
@@ -84,6 +85,19 @@ final class TmdbTransformer
 		);
 	}
 
+	private function transformTvSummary(array $data): array
+	{
+		return [
+			'id' => $data['id'],
+			'type' => 'tv',
+			'title' => htmlentities($data['name']),
+			'overview' => htmlentities(substr($data['overview'], 30)),
+			'rating' => round($data['vote_average'], 2, PHP_ROUND_HALF_DOWN),
+			'imageUrl' => $this->formatImageUrl($data['poster_path']),
+			'releaseYear' =>  $this->formatReleaseDate($data['first_air_date']),
+		];
+	}
+
 	private function getSeasons(array $seasons): array
 	{
 		$data = [];
@@ -127,10 +141,10 @@ final class TmdbTransformer
 		return $episodeDto;
 	}
 
-	private function formatReleaseDate(string $releaseDate): string
+	private function formatReleaseDate(string $releaseDate, string $format = 'Y'): string
 	{
 		return (new DateTimeImmutable($releaseDate))
-			->format('Y');
+			->format($format);
 		// return date('Y', (strtotime($releaseDate) ?? ''));
 	}
 
