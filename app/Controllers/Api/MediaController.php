@@ -74,16 +74,17 @@ final class MediaController extends ApiController
     {
         validate([
             'query' => 'required',
-            'type' => 'required|in:tv,movie,all'
+            'type' => 'in:tv,movie,all'
         ], input()->getOriginalParams());
 
-        $query = input()->get('query');
-        $type = input()->get('type');
+        $query = input('query');
+        $type = input('type') ?? 'all';
 
         response()->json([
             'error' => false,
             'message' => 'success',
-            'data' => MediaService::search($query, $type)
+            'data' => $this->mediaService
+				->search($query, $type)
         ]);
     }
 }

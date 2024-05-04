@@ -18,7 +18,7 @@ final class TmdbApiService implements ApiProviderInterface
 
 	public function __construct()
     {
-		// set transformer
+		// set mapper
 		$this->transformer = new TmdbTransformer();
 
 		$this->client = new Client([
@@ -27,11 +27,6 @@ final class TmdbApiService implements ApiProviderInterface
 				'Authorization' => 'Bearer '.config('tmdb.api_key')
 			],
 		]);
-    }
-
-    private function formatReleaseDate(string $releaseDate): string
-    {
-        return date('Y', strtotime($releaseDate));
     }
 
     private function formatImageUrl(?string $image, bool $highRes = false): ?string
