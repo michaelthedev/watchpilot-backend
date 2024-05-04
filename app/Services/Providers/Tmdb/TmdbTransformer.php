@@ -146,7 +146,6 @@ final class TmdbTransformer
 	{
 		return (new DateTimeImmutable($releaseDate))
 			->format($format);
-		// return date('Y', (strtotime($releaseDate) ?? ''));
 	}
 
 	public function formatImageUrl(?string $image, bool $highRes = false): ?string
