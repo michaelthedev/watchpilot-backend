@@ -56,15 +56,9 @@ final class TmdbApiService implements ApiProviderInterface
 
         $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
-            $featured[] = [
-                'id' => $result['id'],
-                'type' => 'movie',
-                'title' => htmlentities($result['title']),
-                'overview' => htmlentities(substr($result['overview'], 30)),
-                'rating' => $result['vote_average'],
-                'imageUrl' => 'https://image.tmdb.org/t/p/w500' . $result['poster_path'],
-                'releaseYear' =>  date('Y', strtotime($result['release_date']))
-            ];
+			$featured[] = $this->transformer
+				->transform($result)
+				->to('movieSummary');
         }
 
         return $featured;
@@ -82,15 +76,9 @@ final class TmdbApiService implements ApiProviderInterface
 
         $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
-            $featured[] = [
-                'id' => $result['id'],
-                'type' => 'tv',
-                'title' => htmlentities($result['name']),
-                'overview' => htmlentities(substr($result['overview'], 30)),
-                'rating' => $result['vote_average'],
-                'imageUrl' => 'https://image.tmdb.org/t/p/w500' . $result['poster_path'],
-                'releaseYear' =>  date('Y', strtotime($result['first_air_date']))
-            ];
+			$featured[] = $this->transformer
+				->transform($result)
+				->to('tvSummary');
         }
 
         return $featured;
@@ -115,15 +103,9 @@ final class TmdbApiService implements ApiProviderInterface
 
         $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
-            $trending[] = [
-                'id' => $result['id'],
-                'type' => $result['media_type'],
-                'title' => htmlentities($result['title']),
-                'overview' => htmlentities(substr($result['overview'], 30)),
-                'rating' => $result['vote_average'],
-				'imageUrl' => $this->formatImageUrl($result['poster_path']),
-                'releaseYear' =>  date('Y', strtotime($result['release_date']))
-            ];
+			$trending[] = $this->transformer
+				->transform($result)
+				->to('movieSummary');
         }
 
         return $trending;
@@ -140,15 +122,9 @@ final class TmdbApiService implements ApiProviderInterface
 
         $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
-            $trending[] = [
-                'id' => $result['id'],
-                'type' => $result['media_type'],
-                'title' => htmlentities($result['name']),
-                'overview' => htmlentities(substr($result['overview'], 30)),
-                'rating' => $result['vote_average'],
-                'imageUrl' => 'https://image.tmdb.org/t/p/w500' . $result['poster_path'],
-                'releaseYear' =>  date('Y', strtotime($result['first_air_date']))
-            ];
+			$trending[] = $this->transformer
+				->transform($result)
+				->to('tvSummary');
         }
 
         return $trending;
@@ -162,8 +138,10 @@ final class TmdbApiService implements ApiProviderInterface
 		$date = Carbon::now($timezone);
 
 		// get beginning and end of week
-		$beginningOfWeek = $date->startOfWeek()->format('Y-m-d');
-		$endOfWeek = $date->endOfWeek()->format('Y-m-d');
+		$beginningOfWeek = $date->startOfWeek()
+			->format('Y-m-d');
+		$endOfWeek = $date->endOfWeek()
+			->format('Y-m-d');
 
 		$request = $this->client->get('discover/tv', [
 			'query' => [
@@ -177,15 +155,9 @@ final class TmdbApiService implements ApiProviderInterface
 
         $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
-            $aring[] = [
-                'id' => $result['id'],
-                'type' => 'tv',
-                'title' => htmlentities($result['name']),
-                'overview' => htmlentities(substr($result['overview'], 0,100)),
-                'rating' => $result['vote_average'],
-                'imageUrl' => $this->formatImageUrl($result['poster_path']),
-                'releaseYear' => date('Y', strtotime($result['first_air_date']))
-            ];
+            $aring[] = $this->transformer
+				->transform($result)
+				->to('tvSummary');
         }
 
         return $aring;
@@ -214,15 +186,9 @@ final class TmdbApiService implements ApiProviderInterface
 
         $response = json_decode($request->getBody()->getContents(), true);
         foreach ($response['results'] as $result) {
-            $aring[] = [
-                'id' => $result['id'],
-                'type' => 'movie',
-				'title' => htmlentities($result['title']),
-				'overview' => htmlentities(substr($result['overview'], 0, 100)),
-				'rating' => $result['vote_average'],
-                'imageUrl' => $this->formatImageUrl($result['poster_path']),
-				'releaseYear' =>  date('Y', strtotime($result['release_date']))
-            ];
+			$aring[] = $this->transformer
+				->transform($result)
+				->to('movieSummary');
         }
 
         return $aring;
