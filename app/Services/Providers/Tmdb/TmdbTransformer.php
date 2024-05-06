@@ -42,7 +42,7 @@ final class TmdbTransformer
 			rating: $data['vote_average'],
 			runtime: $data['runtime'],
 			tagline: $data['tagline'],
-			trailer: $this->findTrailerFromVideos($data['videos']['results'] ?? []),
+			trailers: $this->findTrailerFromVideos($data['videos']['results'] ?? []),
 			overview: $data['overview'],
 			imageUrl: $this->formatImageUrl($data['poster_path']),
 			releaseDate: $data['release_date'],
@@ -159,21 +159,18 @@ final class TmdbTransformer
 		return null;
 	}
 
-	private function getGenres(array $genres): array
+	private function findTrailerFromVideos(array $videos): array
 	{
-		return array_map(fn($genre) => $genre['name'], $genres);
-	}
-
-	private function findTrailerFromVideos(array $videos): ?array
-	{
+		$trailers = [];
 		foreach ($videos as $video) {
 			if ($video['type'] == 'Trailer') {
-				return [
+				$trailers[] = [
 					'site' => $video['site'],
 					'key' => $video['key']
 				];
 			}
 		}
-		return null;
+
+		return $trailers;
 	}
 }

@@ -23,7 +23,7 @@ final class MovieDetail implements DTO
         public string $imageUrl,
         public int $releaseYear,
         public string $releaseDate,
-		public ?array $trailer = null,
+		public array $trailers = [],
         public ?string $backdropUrl = null,
         public ?string $tagline = null,
         public int $runtime = 0,
