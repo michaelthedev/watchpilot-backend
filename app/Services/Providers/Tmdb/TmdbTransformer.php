@@ -165,8 +165,9 @@ final class TmdbTransformer
 		foreach ($videos as $video) {
 			if ($video['type'] == 'Trailer') {
 				$trailers[] = [
+					'key' => $video['key'],
+					'name' => $video['name'],
 					'site' => $video['site'],
-					'key' => $video['key']
 				];
 			}
 		}
