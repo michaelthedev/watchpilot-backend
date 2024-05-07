@@ -75,6 +75,7 @@ final class TmdbTransformer
 			runtime: $data['episode_run_time'][0] ?? 0,
 			seasons_count: $data['number_of_seasons'],
 			seasons: $this->getSeasons($data['seasons']),
+			trailers: $this->findTrailerFromVideos($data['videos']['results'] ?? []),
 			tagline: $data['tagline'],
 			overview: $data['overview'],
 			imageUrl: $this->formatImageUrl($data['poster_path']),

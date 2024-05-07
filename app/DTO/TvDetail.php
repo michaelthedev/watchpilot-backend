@@ -22,6 +22,7 @@ final class TvDetail
         public string $releaseDate,
 		public int $seasons_count,
         public ?string $backdropUrl = null,
+		public array $trailers = [],
         public ?string $tagline = null,
         public ?string $status = null,
         public int $runtime = 0,

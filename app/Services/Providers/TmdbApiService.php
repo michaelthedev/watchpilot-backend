@@ -257,7 +257,11 @@ final class TmdbApiService implements ApiProviderInterface
 
     public function getTvDetails(int $id): TvDetail
     {
-		$request = $this->client->get('tv/'.$id);
+		$request = $this->client->get('tv/'.$id, [
+			'query' => [
+				'append_to_response' => 'videos'
+			]
+		]);
 
         $response = json_decode($request->getBody()
 			->getContents(), true);
