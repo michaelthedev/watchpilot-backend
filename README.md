@@ -1,7 +1,8 @@
 # watchpilot-backend
 Backend for watchpilot app
 
-Under development
+Under development.
+
 Video demos available in [YouTube playlist](https://www.youtube.com/playlist?list=PLKzL9lajWjTozp51dfz9QE5KS1LUWxteG)
 
 ## Updates
