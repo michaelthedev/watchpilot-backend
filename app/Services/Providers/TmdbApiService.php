@@ -15,6 +15,7 @@ final class TmdbApiService implements ApiProviderInterface
 {
 	private Client $client;
 	private TmdbTransformer $transformer;
+	private int $page = 1;
 
 	public function __construct()
     {
@@ -29,13 +30,13 @@ final class TmdbApiService implements ApiProviderInterface
 		]);
     }
 
-    private function formatImageUrl(?string $image, bool $highRes = false): ?string
-    {
-        if (empty($image)) return null;
-        return 'https://image.tmdb.org/t/p/' .($highRes ? 'original' : 'w500'). $image;
-    }
+	public function setPage(int $page): self
+	{
+		$this->page = $page;
+		return $this;
+	}
 
-    public function getFeaturedMoviesAndShows(): array
+	public function getFeaturedMoviesAndShows(): array
     {
         return [
             'movies' => $this->getFeaturedMovies(),
@@ -84,6 +85,16 @@ final class TmdbApiService implements ApiProviderInterface
         return $featured;
     }
 
+	public function getTrending(string $type = 'all'): array
+	{
+		return match ($type) {
+			'all' => $this->getTrendingMoviesAndShows(),
+			'movies' => $this->getTrendingMovies(),
+			'shows' => $this->getTrendingShows(),
+			default => []
+		};
+	}
+
     public function getTrendingMoviesAndShows(): array
     {
         return [
@@ -97,6 +108,7 @@ final class TmdbApiService implements ApiProviderInterface
         $trending = [];
 		$request = $this->client->get('trending/movie/'.$period, [
 			'query' => [
+				'page' => $this->page,
 				'with_original_language' => 'en'
 			]
 		]);
@@ -116,6 +128,7 @@ final class TmdbApiService implements ApiProviderInterface
         $trending = [];
 		$request = $this->client->get('trending/tv/'.$period, [
 			'query' => [
+				'page' => $this->page,
 				'with_original_language' => 'en'
 			]
 		]);
@@ -294,7 +307,7 @@ final class TmdbApiService implements ApiProviderInterface
                 'title' => $result['title'] ?? $result['name'],
                 'overview' => substr($result['overview'], 30),
                 'rating' => $result['vote_average'],
-                'imageUrl' => $this->formatImageUrl($result['poster_path']),
+                // 'imageUrl' => $this->formatImageUrl($result['poster_path']),
                 'releaseYear' =>  date('Y', strtotime($result['release_date'] ?? $result['first_air_date']))
             ];
         }
