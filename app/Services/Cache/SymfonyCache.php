@@ -20,7 +20,7 @@ final class SymfonyCache implements CacheInterface
 			);
 		} elseif ($driver == 'redis') {
 			$client = RedisAdapter::createConnection(
-				'redis://localhost'
+				'redis://127.0.0.1'
 			);
 			$this->cache = new RedisAdapter($client);
 		}
