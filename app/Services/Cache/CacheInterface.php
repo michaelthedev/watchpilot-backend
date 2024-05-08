@@ -11,4 +11,8 @@ interface CacheInterface
 	public function store(string $key, mixed $value, int $expiry): void;
 
 	public function delete(string $key): bool;
+
+	public function deleteAll(): bool;
+
+	public function prune(): bool;
 }

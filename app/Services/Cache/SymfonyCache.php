@@ -49,9 +49,9 @@ final class SymfonyCache implements CacheInterface
         return $this->cache->deleteItem($key);
     }
 
-	public function deleteAll(): void
+	public function deleteAll(): bool
 	{
-		$this->cache->clear();
+		return $this->cache->clear();
 	}
 
 	public function prune(): bool
