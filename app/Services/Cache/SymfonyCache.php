@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Cache;
 
+use DateTimeInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
@@ -45,9 +46,8 @@ final class SymfonyCache implements CacheInterface
         $this->cache->save($cachedItem);
     }
 
-	public function getOrSet(string $key, mixed $value, int $expiry): mixed
+	public function getOrSet(string $key, mixed $value, ?DateTimeInterface $expiry): mixed
 	{
-		$expiry = $this->secondsToDateTime($expiry);
 		return $this->cache->get($key, function(ItemInterface $item) use($expiry, $value) {
 			$item->expiresAt($expiry);
 
@@ -60,14 +60,6 @@ final class SymfonyCache implements CacheInterface
 				'expiry' => $expiry->format('c')
 			];
 		})['value'] ?? null;
-	}
-
-	private function secondsToDateTime(int $expiry): \DateTime
-	{
-		$dateTime = new \DateTime();
-		$dateTime->modify("+$expiry seconds");
-
-		return $dateTime;
 	}
 
     public function delete(string $key): bool

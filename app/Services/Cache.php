@@ -6,7 +6,8 @@ namespace App\Services;
 
 use App\Services\Cache\CacheInterface;
 use App\Services\Cache\SymfonyCache;
-use Closure;
+use DateTime;
+use DateTimeInterface;
 
 final class Cache
 {
@@ -43,10 +44,16 @@ final class Cache
 	public static function getOrSet(
 		string $key,
 		mixed $value,
-		?int $expiry = null
+		int|string|DateTimeInterface $expiry = 0
 	): mixed
 	{
-		//todo: allow datetime
+		if (is_int($expiry)) {
+			$expiry = (new DateTime())
+				->modify("+$expiry seconds");
+		} elseif (is_string($expiry)) {
+			$expiry = new DateTime($expiry);
+		}
+
 		return self::$cache->getOrSet($key, $value, $expiry);
 	}
 
