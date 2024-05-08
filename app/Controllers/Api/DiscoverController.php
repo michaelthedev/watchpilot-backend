@@ -37,7 +37,17 @@ final class DiscoverController extends ApiController
         ]);
     }
 
-    public function featured(): void
+	public function filterTrending(string $type): void
+	{
+		$page = (int) input('page', 1);
+
+		$trending = $this->mediaService
+			->getTrending($type, $page);
+
+		$this->success('success', $trending);
+	}
+
+    public function featured(?string $type = null): void
     {
 		$featured = Cache::getOrSet('discover.featured', function () {
 			return $this->mediaService

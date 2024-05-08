@@ -33,10 +33,11 @@ final class MediaService
 		$this->provider = new $providerClass();
 	}
 
-    public function getTrending(): array
+    public function getTrending(?string $type = null, int $page = 1): array
     {
 		return $this->provider
-			->getTrendingMoviesAndShows();
+			->setPage($page)
+			->getTrending($type ?? 'all');
     }
 
     public function getFeatured(): array

@@ -33,7 +33,8 @@ Router::group(['prefix' => '/api'], function () {
 
     Router::group(['prefix' => '/discover'], function () {
         Router::get('/trending', [DiscoverController::class, 'trending']);
-        Router::get('/featured', [DiscoverController::class, 'featured']);
+        Router::get('/trending/{type}', [DiscoverController::class, 'filterTrending']);
+        Router::get('/featured/{type?}', [DiscoverController::class, 'featured']);
         Router::get('/airing', [DiscoverController::class, 'airing']);
     });
 

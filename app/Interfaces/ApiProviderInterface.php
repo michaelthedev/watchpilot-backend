@@ -7,6 +7,10 @@ use App\DTO\TvDetail;
 
 interface ApiProviderInterface
 {
+	public function setPage(int $page): self;
+
+	public function getTrending(string $type = 'all'): array;
+
     public function getTrendingMoviesAndShows(): array;
 
     public function getMovieDetails(int $id): MovieDetail;
