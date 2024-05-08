@@ -10,6 +10,8 @@ interface CacheInterface
 
 	public function store(string $key, mixed $value, int $expiry): void;
 
+	public function getOrSet(string $key, mixed $value, int $expiry): mixed;
+
 	public function delete(string $key): bool;
 
 	public function deleteAll(): bool;

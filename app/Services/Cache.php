@@ -42,18 +42,12 @@ final class Cache
 
 	public static function getOrSet(
 		string $key,
-		Closure $param,
-		int $expiry = 3600
+		mixed $value,
+		?int $expiry = null
 	): mixed
 	{
-		if (self::exists($key)) {
-			return self::get($key);
-		}
-
-		$value = $param();
-		self::store($key, $value, $expiry);
-
-		return $value;
+		//todo: allow datetime
+		return self::$cache->getOrSet($key, $value, $expiry);
 	}
 
 	public static function deleteAll(): void
