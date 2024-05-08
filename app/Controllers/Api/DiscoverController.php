@@ -63,9 +63,10 @@ final class DiscoverController extends ApiController
 
     public function airing(): void
     {
-		$airing = Cache::getOrSet('discover.airing.'.str_replace(' ', '_', input('timezone') ?? ''), function () {
+		$timezone = input('timezone', 'UTC');
+		$airing = Cache::getOrSet('discover.airing.'.str_replace(' ', '_', $timezone), function () use($timezone) {
 			return $this->mediaService
-				->getAiring(input('timezone'));
+				->getAiring($timezone);
 		}, 86400);
 
 

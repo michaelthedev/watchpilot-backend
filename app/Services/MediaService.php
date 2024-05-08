@@ -43,13 +43,13 @@ final class MediaService
     public function getFeatured(): array
     {
 		return $this->provider
-			->getFeaturedMoviesAndShows();
+		->getFeaturedMoviesAndShows();
     }
 
-	public function getAiring(?string $timezone = null): array
+	public function getAiring(?string $timezone): array
 	{
 		return $this->provider
-			->getAiring($timezone ?? 'UTC');
+			->getAiring($timezone);
 	}
 
 
