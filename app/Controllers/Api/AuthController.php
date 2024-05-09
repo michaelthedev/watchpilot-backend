@@ -29,15 +29,12 @@ final class AuthController extends ApiController
             input('username'),
             input('password')
         );
-        $status = $loginRes['error'] ? 401 : 200;
 
-        response()
-            ->httpCode($status)
-            ->json([
-                'error' => $loginRes['error'],
-                'message' => $loginRes['message'],
-                'data' => $loginRes['data'] ?? null
-            ]);
+		$this->json([
+			'error' => $loginRes['error'],
+			'message' => $loginRes['message'],
+			'data' => $loginRes['data'] ?? null
+		], $loginRes['error'] ? 401 : 200);
     }
 
     /**
@@ -57,10 +54,7 @@ final class AuthController extends ApiController
             'password' => password_hash(input('password'), PASSWORD_DEFAULT)
         ]);
 
-        response()->json([
-            'error' => false,
-            'message' => 'Registration Successful'
-        ]);
+		$this->success('Registration Successful');
     }
 
 	public function validateToken(): void
