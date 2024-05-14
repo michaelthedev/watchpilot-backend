@@ -50,6 +50,18 @@ final class MediaController extends ApiController
 		}
     }
 
+	public function getSeason(int $id, int $number): void
+	{
+		$season = $this->mediaService
+			->getSeason($id, $number);
+
+		if (!empty($season)) {
+			$this->success('success', $season->toArray());
+		} else {
+			$this->error('Failed to get season');
+		}
+	}
+
 	public function watchProviders(string $type, int $id): void
 	{
 		$providers = $this->mediaService

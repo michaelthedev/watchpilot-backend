@@ -44,6 +44,9 @@ Router::group(['prefix' => '/api'], function () {
     Router::get('/{type}/{id}/related', [MediaController::class, 'related']);
     Router::get('/{type}/{id}/providers', [MediaController::class, 'watchProviders']);
 
+	// tv shows
+    Router::get('/tv/{id}/seasons/{number}', [MediaController::class, 'getSeason']);
+
     Router::get('/search', [MediaController::class, 'search']);
 
 	/** Logged in routes */

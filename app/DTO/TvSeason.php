@@ -11,11 +11,6 @@ namespace App\DTO;
  */
 final class TvSeason
 {
-	/**
-	 * @var null|TvEpisode[]
-	 */
-	private ?array $episodes;
-
     public function __construct(
         public int $id,
         public int $number,
@@ -24,10 +19,10 @@ final class TvSeason
         public float $rating,
         public ?string $imageUrl,
         public string $releaseDate,
-        ?TvEpisode ...$episodes,
+        public ?array $episodes = null,
+		public array $trailers = [],
     )
     {
-		$this->episodes = $episodes;
         $this->rating = round($this->rating, 2);
     }
 

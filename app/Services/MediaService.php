@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
+use App\DTO\TvSeason;
 use App\Interfaces\ApiProviderInterface;
 use Exception;
 
@@ -64,6 +65,12 @@ final class MediaService
 		return $this->provider
 			->getTvDetails($id);
     }
+
+	public function getSeason(int $id, int $number): TvSeason
+	{
+		return $this->provider
+			->getSeason($id, $number);
+	}
 
 	public function watchProviders(string $type, int $id): array
 	{

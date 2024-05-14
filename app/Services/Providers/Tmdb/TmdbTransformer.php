@@ -22,11 +22,12 @@ final class TmdbTransformer
 		return $this;
 	}
 
-	public function to(string $type): array | MovieDetail | TvDetail
+	public function to(string $type): MovieDetail|array|TvDetail|TvSeason
 	{
 		return match ($type) {
 			'movie' => $this->transformMovie($this->data),
 			'tv' => $this->transformTv($this->data),
+			'season' => $this->transformSeason($this->data),
 			'movieSummary' => $this->transformMovieSummary($this->data),
 			'tvSummary' => $this->transformTvSummary($this->data),
 			default => throw new \Exception('Invalid type')
@@ -100,6 +101,30 @@ final class TmdbTransformer
 		];
 	}
 
+	private function transformSeason(array $data): TvSeason
+	{
+		$episodes = [];
+		foreach ($data['episodes'] as $episode) {
+			$episodes[] = $this->getEpisodeDto($episode);
+		}
+
+		if (!empty($data['videos']['results'])) {
+			$trailers = $this->findTrailerFromVideos($data['videos']['results']);
+		}
+
+		return new TvSeason(
+			id: $data['id'],
+			title: $data['name'],
+			number: $data['season_number'],
+			rating: $data['vote_average'],
+			episodes: $episodes,
+			trailers: $trailers ?? [],
+			imageUrl: $this->formatImageUrl($data['poster_path']),
+			overview: $data['overview'],
+			releaseDate: $data['air_date'],
+		);
+	}
+
 	private function getSeasons(array $seasons): array
 	{
 		$data = [];
@@ -109,7 +134,6 @@ final class TmdbTransformer
 				title: $season['name'],
 				number: $season['season_number'],
 				rating: $season['vote_average'],
-				// episodes: [],
 				imageUrl: $this->formatImageUrl($season['poster_path']),
 				overview: $season['overview'],
 				releaseDate: $season['air_date'],
@@ -126,21 +150,20 @@ final class TmdbTransformer
 	private function getEpisodeDto(?array $episode): ?TvEpisode
 	{
 		if (empty($episode)) {
-			$episodeDto = null;
-		} else {
-			$episodeDto = new TvEpisode(
-				id: $episode['id'],
-				title: $episode['name'],
-				rating: $episode['vote_average'],
-				season: $episode['season_number'],
-				runtime: $episode['runtime'],
-				episode: $episode['episode_number'],
-				overview: $episode['overview'],
-				imageUrl: $this->formatImageUrl($episode['still_path']),
-				releaseDate: $episode['air_date'],
-			);
+			return null;
 		}
-		return $episodeDto;
+
+		return new TvEpisode(
+			id: $episode['id'],
+			title: $episode['name'],
+			rating: $episode['vote_average'],
+			season: $episode['season_number'],
+			runtime: $episode['runtime'],
+			episode: $episode['episode_number'],
+			overview: $episode['overview'],
+			imageUrl: $this->formatImageUrl($episode['still_path']),
+			releaseDate: $episode['air_date'],
+		);
 	}
 
 	private function formatReleaseDate(string $releaseDate, string $format = 'Y'): string

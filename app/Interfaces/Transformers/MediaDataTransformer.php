@@ -11,5 +11,5 @@ interface MediaDataTransformer
 {
 	public function transform(array $data): self;
 
-	public function to(string $type): array | MovieDetail | TvDetail;
+	public function to(string $type): mixed;
 }

@@ -4,6 +4,7 @@ namespace App\Services\Providers;
 
 use App\DTO\MovieDetail;
 use App\DTO\TvDetail;
+use App\DTO\TvSeason;
 use App\Interfaces\ApiProviderInterface;
 use App\Services\Providers\Tmdb\TmdbTransformer;
 use Carbon\Carbon;
@@ -283,6 +284,22 @@ final class TmdbApiService implements ApiProviderInterface
 			->transform($response)
 			->to('tv');
     }
+
+	public function getSeason(int $id, int $number): TvSeason
+	{
+		$request = $this->client->get("tv/$id/season/$number", [
+			'query' => [
+				'append_to_response' => 'videos'
+			]
+		]);
+
+		$response = json_decode($request->getBody()
+			->getContents(), true);
+
+		return $this->transformer
+			->transform($response)
+			->to('season');
+	}
 
     public function search(string $query, string $type): array
     {
